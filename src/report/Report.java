@@ -18,7 +18,7 @@ import java.time.Period;
 
 
 
-public class Report implements Pdfvalidate{
+public class Report{
     private int id;
     private String name;
     private Period dateRange;
@@ -65,7 +65,7 @@ public class Report implements Pdfvalidate{
     public String toString() {
         return "Report: " + name + "\n" +
                "ID: " + id + "\n" +
-               "Date Range: " + dateRange + "\n" +
+               "Date Range: " + startDate + " - " + endDate + "\n" +
                "Expenses: " + (expenses.isEmpty() ? "No expenses recorded." : expenses) + "\n" +
                "Total: $" + totalExpenses;
     }
@@ -157,6 +157,7 @@ public class Report implements Pdfvalidate{
         YearlyReport yearly = new YearlyReport(2, "YearlyReport", 2024);
         monthly.generatePDF();
         report.generatePDF();
+        System.out.println(report);
         yearly.generatePDF();
     }
 }
