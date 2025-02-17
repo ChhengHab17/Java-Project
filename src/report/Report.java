@@ -1,11 +1,11 @@
 package report;
 import Expense.Expense;
+import Expense.ExpenseManager;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 import java.awt.Color;
 import java.io.File;
@@ -15,11 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.temporal.ChronoUnit;
 
 
 
-public class Report {
+public class Report implements Pdfvalidate{
     private int id;
     private String name;
     private Period dateRange;
@@ -30,6 +29,8 @@ public class Report {
     public Report(int id, String name, LocalDate startDate, LocalDate endDate){
         this.id = id;
         this.name = name;
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.dateRange = Period.between(startDate, endDate);
         this.expenses = new ArrayList<>();
         this.totalExpenses = 0;
@@ -78,7 +79,6 @@ public class Report {
             PDPageContentStream contentStream = new PDPageContentStream(document, page);
             float pageWidth = page.getMediaBox().getWidth();
             float margin = 50;
-            float startX = pageWidth -(2* margin);
             float startY = 700;  // Starting Y position
             float lineHeight = 20; // Space between lines
             //Title
@@ -112,19 +112,20 @@ public class Report {
             contentStream.endText();
             startY -= lineHeight;
             //Right side
-            float dateRangeWidth = font.getStringWidth(dateRange.toString()) / 1000 * 14;
+            String dateRangeText = startDate + " to " + endDate;  // Show actual dates
+            float dateRangeWidth = font.getStringWidth(dateRangeText) / 1000 * 14;
             float dateRangeX = pageWidth - margin - dateRangeWidth;
             contentStream.beginText();
             contentStream.newLineAtOffset(dateRangeX, startY);
-            contentStream.showText(dateRange.toString());
+            contentStream.showText(dateRangeText);
             contentStream.endText();
-            startY -= (lineHeight + 10);
             //Expenses
             contentStream.beginText();
             contentStream.newLineAtOffset(margin, startY);
             contentStream.showText("Expenses: ");
             contentStream.endText();
             startY -= lineHeight;
+            
             for (Expense expense : expenses) {
                 contentStream.beginText();
                 contentStream.newLineAtOffset(margin + 20, startY);
@@ -142,7 +143,7 @@ public class Report {
             contentStream.showText(totalText);
             contentStream.endText();
             contentStream.close();
-            document.save("report.pdf");
+            document.save(name + ".pdf");
             document.close();
             System.out.println("PDF generated successfully.");
 
@@ -152,7 +153,11 @@ public class Report {
     }
     public static void main(String[] args) {
         Report report = new Report(1, "Report 1", LocalDate.of(2021, 1, 1), LocalDate.of(2021, 12, 31));
+        MonthlyReport monthly = new MonthlyReport(0, "reportMonth", 2024, 1);
+        YearlyReport yearly = new YearlyReport(2, "YearlyReport", 2024);
+        monthly.generatePDF();
         report.generatePDF();
+        yearly.generatePDF();
     }
 }
 
