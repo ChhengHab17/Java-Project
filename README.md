@@ -1,18 +1,54 @@
-## Getting Started
+# Track expenses application
+The track expenses applicaton is an application that tracks our expenses monthly by manually input the expenese based on the categories and it will genereate a report of the expenses monthly for users.
+## Core Features
+1. User managaement
+   - Register
+   - Login
+2. Expense
+   - Category
+   - Amount
+   - Date
+   - Display
+3. ExpenseManager
+   - Add
+   - View
+   - Total
+   - Delete
+   - Filter
+   - Edit
+4. Budget
+   - SetBudget
+   - GetBudget
+   - CheckExceeded
+5. Budget management
+   - Budget
+   - Check
+   - Remaining
+6. ReportGenerator
+   - generateExpenseReport
+   - generateGraphicalReport
+   - exportToCSV
+7. DatabaseConnector 
+   - connect
+   - insertExpense
+   - getAllExpenses
+   - deleteExpense
+   - closeConnection
+8. ExpenseTrackerApp 
+   - main
+   - showMainMenu
+   - handleUserInput
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
-
-## Folder Structure
-
-The workspace contains two folders by default, where:
-
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
-
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
-
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
-
-## Dependency Management
-
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+## Responsibilities
+- Sophal Chanrat (Project leader)
+   - Expense managenment
+   - Expense
+- Te Chhenghab
+   - ExpenseTrackerApp
+   - ReportGenerator
+- Sithav Seavthean
+   - User management
+   - DatabaseConnector
+- Phon Sokleaphea
+   - Budget management
+   - Budget
