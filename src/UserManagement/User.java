@@ -1,5 +1,6 @@
 package UserManagement;
 
+import DatabaseConnector.DatabaseConnection;
 import java.util.*;
 
 public class User {
@@ -12,13 +13,8 @@ public class User {
     private String username;
     private String password;
 
-    private static Map<String, String> userCredentials = new HashMap<>();
-    //use map to quick access to a password when user login (username must be unique)
-    private static Set<String> activeUsers = new HashSet<>();
-    //use set to store active users
     private static ArrayList<String> loginHistory = new ArrayList<>();
 
-    
     public User(String firstName, String lastName, String dob, String gender, String phoneNumber, String email, String username, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -30,7 +26,6 @@ public class User {
         this.password = password;
     }
 
-    
     public void register() {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter first name: ");
@@ -49,13 +44,17 @@ public class User {
         this.username = scanner.nextLine();
         System.out.print("Enter password: ");
         this.password = scanner.nextLine();
-        
-        // store usercredential into map
-        userCredentials.put(this.username, this.password);
-        System.out.println("User registered successfully!");
+
+        // Store user credentials in the database and get the generated user ID
+        //this line use to insert user data into database If something goes wrong, it will return 0 or -1 to indicate failure.
+        int userId = DatabaseConnection.insertUser(this.firstName, this.lastName, this.dob, this.gender, this.phoneNumber, this.email, this.username, this.password);
+        if (userId > 0) {
+            System.out.println("User registered successfully! Your user ID is: " + userId);
+        } else {
+            System.out.println("Failed to register user.");
+        }
     }
 
-    
     public boolean login() {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter username: ");
@@ -63,10 +62,8 @@ public class User {
         System.out.print("Enter password: ");
         String password = scanner.nextLine();
 
-        if (userCredentials.containsKey(username) && userCredentials.get(username).equals(password)) {
+        if (DatabaseConnection.userExists(username, password)) {
             System.out.println("Login successful!");
-            // Add to active users set
-            activeUsers.add(username);
             // Add to login history
             loginHistory.add(username + " logged in at " + new Date());
             return true;
@@ -81,13 +78,14 @@ public class User {
         }
     }
 
-    
     public void forgetPassword() {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter your username: ");
         String username = scanner.nextLine();
-        if (userCredentials.containsKey(username)) {
-            System.out.println("Your password is: " + userCredentials.get(username));
+        // Retrieve password from the database
+        String password = DatabaseConnection.getPassword(username);
+        if (password != null) {
+            System.out.println("Your password is: " + password);
         } else {
             System.out.println("Username not found!");
         }
