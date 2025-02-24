@@ -32,18 +32,18 @@ public class DatabaseConnection {
             if (rowsInserted > 0) {
                 try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
-                        return generatedKeys.getInt(1);
+                        return generatedKeys.getInt(1); // Return the generated user ID
                     }
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return -1;
+        return -1; // Return -1 if registration failed
     }
 
     public static boolean userExists(String username, String password) {
-        String selectSql = "SELECT * FROM users WHERE username = ? AND password = ?";
+        String selectSql = "SELECT * FROM newusers WHERE username = ? AND password = ?";
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(selectSql)) {
             preparedStatement.setString(1, username);
@@ -58,7 +58,7 @@ public class DatabaseConnection {
     }
 
     public static String getPassword(String username) {
-        String selectSql = "SELECT password FROM users WHERE username = ?";
+        String selectSql = "SELECT password FROM newusers WHERE username = ?";
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(selectSql)) {
             preparedStatement.setString(1, username);
@@ -71,5 +71,19 @@ public class DatabaseConnection {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static boolean phoneNumberExists(String phoneNumber) {
+        String selectSql = "SELECT * FROM newusers WHERE phone_number = ?";
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(selectSql)) {
+            preparedStatement.setString(1, phoneNumber);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                return resultSet.next();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

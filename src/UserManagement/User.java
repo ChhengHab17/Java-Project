@@ -36,10 +36,26 @@ public class User {
         this.dob = scanner.nextLine();
         System.out.print("Enter gender: ");
         this.gender = scanner.nextLine();
-        System.out.print("Enter phone number: ");
-        this.phoneNumber = scanner.nextLine();
-        System.out.print("Enter email: ");
-        this.email = scanner.nextLine();
+        
+        while(true){
+            System.out.print("Enter phone number: ");
+            this.phoneNumber = scanner.nextLine();
+            if(!DatabaseConnection.phoneNumberExists(this.phoneNumber)){
+                break;
+            }else{
+                System.out.println("Phone number already exists please try a new Phone number!!");
+            }
+        }
+
+        while (true) {
+            System.out.print("Enter email: ");
+            this.email = scanner.nextLine();
+            if(this.email.contains("@")){
+                break;
+            }else{
+                System.out.println("invalid email please try again!!");
+            }
+        }
         System.out.print("Enter username: ");
         this.username = scanner.nextLine();
         System.out.print("Enter password: ");
@@ -72,24 +88,24 @@ public class User {
             System.out.print("Forget password?(yes/no) : ");
             String response = scanner.nextLine();
             if (response.equalsIgnoreCase("yes")) {
-                forgetPassword();
+                //forgetPassword();
             }
             return false;
         }
     }
 
-    public void forgetPassword() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter your username: ");
-        String username = scanner.nextLine();
-        // Retrieve password from the database
-        String password = DatabaseConnection.getPassword(username);
-        if (password != null) {
-            System.out.println("Your password is: " + password);
-        } else {
-            System.out.println("Username not found!");
-        }
-    }
+    // public void forgetPassword() {
+    //     Scanner scanner = new Scanner(System.in);
+    //     System.out.print("Enter your username: ");
+    //     String username = scanner.nextLine();
+    //     // Retrieve password from the database
+    //     String password = DatabaseConnection.getPassword(username);
+    //     if (password != null) {
+    //         System.out.println("Your password is: " + password);
+    //     } else {
+    //         System.out.println("Username not found!");
+    //     }
+    // }
 
     public void displayStats() {
         System.out.println("\nLogin History:");
