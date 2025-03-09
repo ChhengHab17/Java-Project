@@ -3,6 +3,8 @@ import java.util.Scanner;
 
 import Expense.*;
 import report.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 
 public class App {
     public void expenseMenu() {
@@ -75,9 +77,114 @@ public class App {
             }
         }
     }
+    public void reportMenu() {
+        int id;
+        String name;
+        LocalDate startDate = null;
+        LocalDate endDate = null;
+        int month;
+        int year;
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            try {
+                System.out.println("1. Generate Report");
+                System.out.println("2. Generate Monthly Reports");
+                System.out.println("3. Generate Yearly Reports");
+                System.out.println("4. Generate Customize Reports");
+                System.out.println("5. Exit");
+                System.out.print("Choose an option: ");
+                int choice = scanner.nextInt();
+                scanner.nextLine(); // consume the leftover newline
+
+                switch (choice) {
+                    case 1:
+                        System.out.print("Enter report id: ");
+                        id = scanner.nextInt();
+                        scanner.nextLine();
+                        System.out.print("Enter report name: ");
+                        name = scanner.nextLine();
+                        Report report = new Report(id, name);
+                        // Generate the report
+                        report.generatePDF();
+                        break;
+
+                    case 2:
+                        System.out.print("Enter report id: ");
+                        id = scanner.nextInt();
+                        scanner.nextLine();
+                        System.out.print("Enter report name: ");
+                        name = scanner.nextLine();
+                        System.out.print("Enter Year: ");
+                        year = scanner.nextInt();
+                        System.out.print("Enter Month: ");
+                        month = scanner.nextInt();
+                        MonthlyReport monthlyReport = new MonthlyReport(id, name, year, month);
+                        monthlyReport.generatePDF();
+                        break;
+
+                    case 3:
+                        System.out.print("Enter report id: ");
+                        id = scanner.nextInt();
+                        scanner.nextLine();
+                        System.out.print("Enter report name: ");
+                        name = scanner.nextLine();
+                        System.out.print("Enter Year: ");
+                        year = scanner.nextInt();
+                        YearlyReport yearlyReport = new YearlyReport(id, name, year);
+                        yearlyReport.generatePDF();
+                        break;
+
+                    case 4:
+                        System.out.print("Enter report id: ");
+                        id = scanner.nextInt();
+                        scanner.nextLine();
+                        System.out.print("Enter report name: ");
+                        name = scanner.nextLine();
+
+                        // Handling date input
+                        boolean validDates = false;
+                        while (!validDates) {
+                            try {
+                                System.out.print("Enter Start Date (YYYY-MM-DD): ");
+                                startDate = LocalDate.parse(scanner.nextLine());
+                                System.out.print("Enter End Date (YYYY-MM-DD): ");
+                                endDate = LocalDate.parse(scanner.nextLine());
+                                validDates = true; // If no exception, dates are valid
+                            } catch (DateTimeParseException e) {
+                                System.out.println("Invalid date format. Please enter the date in YYYY-MM-DD format.");
+                            }
+                        }
+
+                        // Create and generate the custom report
+                        CustomizeReport customizeReport = new CustomizeReport(id, name, startDate, endDate);
+                        customizeReport.generatePDF();
+                        break;
+
+                    case 5:
+                        System.out.println("Exiting!");
+                        scanner.close();
+                        return;
+
+                    default:
+                        System.out.println("Invalid option. Please try again.");
+                }
+
+            } catch (InputMismatchException e) {
+                // Handles invalid input like non-integer values when choosing menu options
+                System.out.println("Invalid input. Please enter a valid number.");
+                scanner.nextLine(); // Clear the invalid input
+            } catch (Exception e) {
+                // Catch any unexpected errors and print a generic message
+                System.out.println("An error occurred: " + e.getMessage());
+                e.printStackTrace(); // Print stack trace for debugging purposes (optional)
+            }
+        }
+    }
 
     public static void main(String[] args) throws Exception {
         App app = new App();
-        app.expenseMenu();
+        app.reportMenu();
+        // app.expenseMenu();
     }
 }
