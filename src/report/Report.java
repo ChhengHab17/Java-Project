@@ -1,73 +1,61 @@
 package report;
-import Expense.Expense;
-// import Expense.ExpenseManager;
+
+import java.io.File;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
-
 import java.awt.Color;
-import java.io.File;
-import java.io.IOException;
+import Expense.Expense;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.time.LocalDate;
-import java.time.Period;
-
-
-
-public class Report{
+public class Report {
     private int id;
-    private String name;
-    private Period dateRange;
-    LocalDate startDate;
-    LocalDate endDate;
+    private String fileName;
     private List<Expense> expenses;
     private double totalExpenses;
-    public Report(int id, String name, LocalDate startDate, LocalDate endDate){
+    LocalDate startDate;
+    LocalDate endDate;
+    public Report(int id, String fileName){
         this.id = id;
-        this.name = name;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.dateRange = Period.between(startDate, endDate);
+        this.fileName = fileName;
+        this.startDate = LocalDate.of(2021, 1, 1);
+        this.endDate = LocalDate.of(2021, 12, 31);
         this.expenses = new ArrayList<>();
         this.totalExpenses = 0;
     }
-
-    public void setName(String name){
-        this.name = name;
-    }
-    public void setDateRange(Period dateRange){
-        this.dateRange = dateRange;
-    }
-    public void setStartDate(LocalDate startDate){
+    public Report(int id, String fileName, LocalDate startDate, LocalDate endDate){
+        this.id = id;
+        this.fileName = fileName;
         this.startDate = startDate;
-    }
-    public void setEndDate(LocalDate endDate){
         this.endDate = endDate;
+        this.expenses = new ArrayList<>();
+        this.totalExpenses = 0;
+    }
+    public void setName(String fileName){
+        this.fileName = fileName;
     }
     public String getName(){
-        return name;
+        return fileName;
     }
-    public Period getDateRange(){
-        return dateRange;
-    }
-    public LocalDate getStartDate(){
-        return startDate;
-    }
-    public LocalDate getEndDate(){
-        return endDate;
+    public String getDateRange(){
+        return startDate + " - " + endDate;
     }
 
     @Override
     public String toString() {
-        return "Report: " + name + "\n" +
+        return "Report: " + fileName + "\n" +
                "ID: " + id + "\n" +
-               "Date Range: " + startDate + " - " + endDate + "\n" +
+               "Date Range: " + getDateRange() + "\n" +
                "Expenses: " + (expenses.isEmpty() ? "No expenses recorded." : expenses) + "\n" +
                "Total: $" + totalExpenses;
+    }
+    public String getTitle(){
+        return "MainReport";
     }
     public void generatePDF(){
         try{
@@ -82,7 +70,7 @@ public class Report{
             float startY = 700;  // Starting Y position
             float lineHeight = 20; // Space between lines
             //Title
-            String title = "Report";
+            String title = getTitle();
             contentStream.setFont(font, 18);
             contentStream.setNonStrokingColor(Color.blue);
             float titleWidth = font.getStringWidth(title) / 1000 * 18;
@@ -112,12 +100,12 @@ public class Report{
             contentStream.endText();
             startY -= lineHeight;
             //Right side
-            String dateRangeText = startDate + " to " + endDate;  // Show actual dates
-            float dateRangeWidth = font.getStringWidth(dateRangeText) / 1000 * 14;
+            String allDate = getDateRange();
+            float dateRangeWidth = font.getStringWidth(allDate) / 1000 * 14;
             float dateRangeX = pageWidth - margin - dateRangeWidth;
             contentStream.beginText();
             contentStream.newLineAtOffset(dateRangeX, startY);
-            contentStream.showText(dateRangeText);
+            contentStream.showText(allDate);
             contentStream.endText();
             //Expenses
             contentStream.beginText();
@@ -143,7 +131,7 @@ public class Report{
             contentStream.showText(totalText);
             contentStream.endText();
             contentStream.close();
-            document.save(name + ".pdf");
+            document.save(fileName + ".pdf");
             document.close();
             System.out.println("PDF generated successfully.");
 
@@ -152,14 +140,7 @@ public class Report{
         }
     }
     public static void main(String[] args) {
-        Report report = new Report(1, "Report 1", LocalDate.of(2021, 1, 1), LocalDate.of(2021, 12, 31));
-        MonthlyReport monthly = new MonthlyReport(0, "reportMonth", 2024, 1);
-        YearlyReport yearly = new YearlyReport(2, "YearlyReport", 2024);
-        monthly.generatePDF();
+        Report report = new Report(1, "MainReport");
         report.generatePDF();
-        System.out.println(report);
-        yearly.generatePDF();
     }
 }
-
-
