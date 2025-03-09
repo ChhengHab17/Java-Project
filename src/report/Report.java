@@ -20,6 +20,9 @@ public class Report {
     private double totalExpenses;
     LocalDate startDate;
     LocalDate endDate;
+    public Report(){
+        
+    }
     public Report(int id, String fileName){
         this.id = id;
         this.fileName = fileName;
