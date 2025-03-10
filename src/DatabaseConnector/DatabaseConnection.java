@@ -22,7 +22,7 @@ public class DatabaseConnection {
              PreparedStatement preparedStatement = connection.prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, firstName);
             preparedStatement.setString(2, lastName);
-            preparedStatement.setDate(3, java.sql.Date.valueOf(dob)); // Ensure dob is in YYYY-MM-DD format
+            preparedStatement.setDate(3, java.sql.Date.valueOf(dob)); 
             preparedStatement.setString(4, gender);
             preparedStatement.setString(5, phoneNumber);
             preparedStatement.setString(6, email);
@@ -32,7 +32,7 @@ public class DatabaseConnection {
             if (rowsInserted > 0) {
                 try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
-                        return generatedKeys.getInt(1); // Return the generated user ID
+                        return generatedKeys.getInt(1); // Return generated id
                     }
                 }
             }
@@ -76,8 +76,36 @@ public class DatabaseConnection {
     public static boolean phoneNumberExists(String phoneNumber) {
         String selectSql = "SELECT * FROM newusers WHERE phone_number = ?";
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(selectSql)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(selectSql)) {
             preparedStatement.setString(1, phoneNumber);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                return resultSet.next();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    public static boolean emailExists(String email){
+        String selectsql = "SELECT * FROM newusers WHERE email = ?";
+        try (Connection connection = getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(selectsql)){
+            preparedStatement.setString(1, email);
+            try (ResultSet resultSet = preparedStatement.executeQuery()){
+                return resultSet.next();
+            }
+            } catch (SQLException e){
+                e.printStackTrace();
+                return false;
+            }
+    }
+    
+    public static boolean usernameExists(String username) {
+        String selectSql = "SELECT * FROM newusers WHERE username = ?";
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(selectSql)) {
+            preparedStatement.setString(1, username);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 return resultSet.next();
             }
