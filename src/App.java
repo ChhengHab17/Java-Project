@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import Expense.*;
 import report.*;
+import UserManagement.User;
 import java.time.LocalDate;
 
 public class App {
@@ -182,9 +183,40 @@ public class App {
         }
     }
 
+    public void userMenu(){
+        Scanner scanner = new Scanner(System.in);
+        User user = new User("", "");
+        while (true) {
+            System.out.println("\nMenu:");
+            System.out.println("1. Register");
+            System.out.println("2. Login");
+            System.out.println("3. Exit");
+            System.out.print("Choose an option: ");
+            
+            try {
+                int choice = Integer.parseInt(scanner.nextLine());
+                switch (choice) {
+                    case 1:
+                        user.register();
+                        break;
+                    case 2:
+                        user.login();
+                        break;
+                    case 3:
+                        System.out.println("Exiting...");
+                        scanner.close();
+                        System.exit(0);
+                    default:
+                        System.out.println("Invalid choice. Please select again.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number.");
+            }
+        }
+    }
     public static void main(String[] args) throws Exception {
         App app = new App();
-        app.reportMenu();
+        app.userMenu();
         // app.expenseMenu();
     }
 }
