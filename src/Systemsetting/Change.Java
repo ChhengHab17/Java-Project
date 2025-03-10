@@ -32,4 +32,5 @@ public class Change{
         
         return DatabaseConnection.updateEmail(username, newEmail);
     }
+
 }
