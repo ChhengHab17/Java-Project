@@ -1,8 +1,8 @@
-package Systemsetting;
+package systemsetting;
 
-import DatabaseConnector.DatabaseConnection;
+import databaseconnector.DatabaseConnection;
 
-public class Change {
+public class Change{
     private String username;
 
     public Change(String username) {

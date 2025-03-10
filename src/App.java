@@ -4,10 +4,13 @@ import java.util.Scanner;
 
 import Expense.*;
 import report.*;
+import systemsetting.*;
 import UserManagement.User;
+
 import java.time.LocalDate;
 
 public class App {
+
     public void expenseMenu() {
         ExpenseManager expenseManager = new ExpenseManager();
         Scanner scanner = new Scanner(System.in);
@@ -182,15 +185,15 @@ public class App {
             }
         }
     }
-
     public void userMenu(){
         Scanner scanner = new Scanner(System.in);
-        User user = new User("", "");
+        User user = new User(null, null, null, null, null, null, null, null);
         while (true) {
             System.out.println("\nMenu:");
             System.out.println("1. Register");
             System.out.println("2. Login");
-            System.out.println("3. Exit");
+            System.out.println("3. Display Login History");
+            System.out.println("4. Exit");
             System.out.print("Choose an option: ");
             
             try {
@@ -203,6 +206,9 @@ public class App {
                         user.login();
                         break;
                     case 3:
+                        user.displayStats();
+                        break;
+                    case 4:
                         System.out.println("Exiting...");
                         scanner.close();
                         System.exit(0);
@@ -214,6 +220,10 @@ public class App {
             }
         }
     }
+    public void settingMenu(){
+        Change ch = new Change(username);
+    }
+
     public static void main(String[] args) throws Exception {
         App app = new App();
         app.userMenu();
