@@ -2,7 +2,7 @@ package UserManagement;
 
 import java.util.*;
 
-import databaseconnector.DatabaseConnection;
+import DatabaseConnector.DatabaseConnection;
 
 public class User {
     private String firstName;

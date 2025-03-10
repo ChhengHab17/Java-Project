@@ -1,6 +1,6 @@
 package systemsetting;
 
-import databaseconnector.DatabaseConnection;
+import DatabaseConnector.DatabaseConnection;
 
 public class Change{
     private String username;
