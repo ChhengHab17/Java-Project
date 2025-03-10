@@ -221,7 +221,7 @@ public class App {
         }
     }
     public void settingMenu(){
-        Change ch = new Change(username);
+        
     }
 
     public static void main(String[] args) throws Exception {
