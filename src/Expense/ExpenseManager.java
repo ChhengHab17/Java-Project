@@ -9,10 +9,10 @@ public class ExpenseManager {
         expenseList = new ArrayList<>();
     }
 
-    public void addExpense(String category, String detail, double amount, String date) {
-        Expense expense = new Expense(category, detail, amount, date);
+    public void addExpense(String category, double amount, String date, String currency) {
+        Expense expense = new Expense(category, amount, date, currency);
         expenseList.add(expense);
-        System.out.println("Expense added successfully.");
+        System.out.println("Expense added successfully: " + amount + currency);
     }
 
     public void viewExpenses() {
@@ -25,7 +25,13 @@ public class ExpenseManager {
         }
     }
 
-    public void deleteExpense(int id) {
-       
+    public void calculateTotal() {
+        double total = 0;
+        for (Expense expense : expenseList) {
+            total += expense.getAmount();
+        }
+        System.out.println("Total Expenses: $" + total);
     }
+
+    
 }
