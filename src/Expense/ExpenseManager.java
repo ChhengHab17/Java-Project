@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class ExpenseManager {
     private ArrayList<Expense> expenseList;
+    private static final double EXCHANGE_RATE = 4100.0;
 
     public ExpenseManager() {
         expenseList = new ArrayList<>();
@@ -23,15 +24,62 @@ public class ExpenseManager {
                 System.out.println(expense.getDetails());
             }
         }
-    }
 
-    public void calculateTotal() {
-        double total = 0;
+        System.out.println("Expenses in USD: $" + getTotalUSD());
+        System.out.println("Expenses in KHR: RIEL" + getTotalKHR());
+    }
+                
+                    private String getTotalUSD() {
+                // TODO Auto-generated method stub
+                throw new UnsupportedOperationException("Unimplemented method 'getTotalUSD'");
+            }
+        
+                    private String getTotalKHR() {
+                // TODO Auto-generated method stub
+                throw new UnsupportedOperationException("Unimplemented method 'getTotalKHR'");
+            }
+        
+        public void calculateTotal() {
+        double totalUSD = 0;
         for (Expense expense : expenseList) {
-            total += expense.getAmount();
+            totalUSD += expense.getAmountInUSD();
         }
-        System.out.println("Total Expenses: $" + total);
+
+
+        double totalKHR = totalUSD * EXCHANGE_RATE;
+
+        System.out.println("Total Expenses in USD: $" + totalUSD + " (KHR " + totalKHR + ")");
+    }
+    
+    public void deleteExpense(String category) {
+        boolean deleted = false;
+        for (int i = 0; i < expenseList.size(); i++) {
+            if (expenseList.get(i).getCategory().equalsIgnoreCase(category)) {
+                expenseList.remove(i);
+                System.out.println("Expense in category \"" + category + "\" deleted.");
+                deleted = true;
+                break;
+            }
+        }
+        if (!deleted) {
+            System.out.println("No expense found for category: " + category);
+        }
     }
 
+    public void editExpense(String category, double newAmount, String newDate) {
+        boolean found = false;
+        for (Expense expense : expenseList) {
+            if (expense.getCategory().equalsIgnoreCase(category)) {
+                expense.setAmount(newAmount);
+                expense.setDate(newDate);
+                System.out.println("Expense updated successfully.");
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            System.out.println("No expense found for category: " + category);
+        }
+    }
     
 }
