@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 import Expense.*;
 import report.*;
-import systemsetting.*;
+import Systemsetting.*;
 import UserManagement.User;
 
 import java.time.LocalDate;
