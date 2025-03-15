@@ -14,10 +14,10 @@ import java.awt.Color;
 import Expense.Expense;
 
 public class Report {
-    private int id;
-    private String fileName;
-    private List<Expense> expenses;
-    private double totalExpenses;
+    protected int id;
+    protected String fileName;
+    protected List<Expense> expenses;
+    protected double totalExpenses;
     LocalDate startDate;
     LocalDate endDate;
     public Report(){
