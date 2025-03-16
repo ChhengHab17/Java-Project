@@ -40,5 +40,22 @@ public class Category {
             return false;
         return true;
     }
+    public void changeCategory(String oldName, String newName, String description){
+        if(this.name == oldName){
+            this.name = newName;
+            this.description = description;
+            System.out.println("Category changed successfully.");
+        }else{
+            System.out.println("Category not found.");
+        }
+    }
+    public static void main(String[] args) {
+        Category category = new Category("Category1", "Description1");
+        System.out.println(category.toString());
+        category.changeCategory("Category3", "Category2", "Description2");
+        System.out.println(category.toString());
+
+    }
 }
+
 
