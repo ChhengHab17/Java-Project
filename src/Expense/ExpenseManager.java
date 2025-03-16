@@ -20,35 +20,28 @@ public class ExpenseManager {
         if (expenseList.isEmpty()) {
             System.out.println("No expenses recorded.");
         } else {
+            System.out.println("\nExpense List:");
             for (Expense expense : expenseList) {
-                System.out.println(expense.getDetails());
+                double amountInUSD = expense.getAmountInUSD();
+                double amountInKHR = amountInUSD * EXCHANGE_RATE;
+
+                System.out.println(expense.getDetails() + 
+                                   " | USD: $" + amountInUSD + 
+                                   " | KHR: " + amountInKHR + "៛");
             }
         }
-
-        System.out.println("Expenses in USD: $" + getTotalUSD());
-        System.out.println("Expenses in KHR: RIEL" + getTotalKHR());
     }
-                
-                    private String getTotalUSD() {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException("Unimplemented method 'getTotalUSD'");
-            }
         
-                    private String getTotalKHR() {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException("Unimplemented method 'getTotalKHR'");
-            }
-        
-        public void calculateTotal() {
+    public void calculateTotal() {
         double totalUSD = 0;
         for (Expense expense : expenseList) {
             totalUSD += expense.getAmountInUSD();
         }
-
-
         double totalKHR = totalUSD * EXCHANGE_RATE;
 
-        System.out.println("Total Expenses in USD: $" + totalUSD + " (KHR " + totalKHR + ")");
+        System.out.println("\nTotal Expenses:");
+        System.out.println("USD: $" + totalUSD);
+        System.out.println("KHR: " + totalKHR + "៛");
     }
     
     public void deleteExpense(String category) {
