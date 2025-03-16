@@ -3,7 +3,7 @@ package UserManagement;
 import DatabaseConnector.DatabaseConnection;
 import java.util.*;
 import Systemsetting.Usersetting;
-
+import Systemsetting.Useracc;
 
 public class User extends Person {
     private String username;
@@ -18,6 +18,7 @@ public class User extends Person {
 
     public void register() {
         Scanner scanner = new Scanner(System.in);
+        try {
         System.out.print("Enter first name: ");
         this.firstName = scanner.nextLine();
         System.out.print("Enter last name: ");
@@ -65,26 +66,33 @@ public class User extends Person {
         } else {
             System.out.println("Failed to register user.");
         }
+    } catch (Exception e) {
+        System.out.println("An error occurred. Please try again.");
+    }
     }
 
     public boolean login() {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter username: ");
-        String username = scanner.nextLine();
-        System.out.print("Enter password: ");
-        String password = scanner.nextLine();
-
-        if (DatabaseConnection.userExists(username, password)) {
-            System.out.println("Login successful!");
-            loginHistory.add(username + " logged in at " + new Date());
-            return true;
-        } else {
-            System.out.println("Invalid username or password.");
-            System.out.print("Forgot password? (yes/no): ");
-            String response = scanner.nextLine();
-            if (response.equalsIgnoreCase("yes")) {
-                // forgetPassword();
+        try {
+            System.out.print("Enter username: ");
+            String enteredUsername = scanner.nextLine();
+            System.out.print("Enter password: ");
+            String enteredPassword = scanner.nextLine();
+    
+            if (DatabaseConnection.userExists(enteredUsername, enteredPassword)) {
+                System.out.println("Login successful!");
+                
+                // Update the username field of the User object
+                this.username = enteredUsername;
+    
+                return true;
+            } else {
+                System.out.println("Invalid username or password.");
+                return false;
             }
+        } catch (Exception e) {
+            System.out.println("An error occurred during login: " + e.getMessage());
+            e.printStackTrace();
             return false;
         }
     }
@@ -97,10 +105,49 @@ public class User extends Person {
     }
 
 
-    public static void main(String[] args) {
+    public void chooseSetting() {
+        Scanner scanner = new Scanner(System.in);
+        Usersetting userSetting = new Usersetting(this.username); // Pass the logged-in username
+    
+        try {
+            System.out.println("\n⚙️ Settings Menu:");
+            System.out.println("1. Change Password");
+            System.out.println("2. Change Username");
+            System.out.println("3. Change Phone Number");
+            System.out.println("4. Change Email");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine();  // Consume newline
+    
+            switch (choice) {
+                case 1:
+                    userSetting.changePassword(); // Call the changePassword method
+                    break;
+                case 2:
+                    userSetting.changeUsername(); // Call the changeUsername method
+                    break;
+                case 3:
+                    System.out.println("Change Phone Number feature not implemented yet.");
+                    break;
+                case 4:
+                    System.out.println("Change Email feature not implemented yet.");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please select a valid option.");
+            }
+        } catch (Exception e) {
+            System.out.println("An error occurred: " + e.getMessage());
+        }
+    }
+        public static void main(String[] args) {
         User user = new User("", "", "", "", "", "", "", "");
-        user.register();
-        user.login();
-        user.displayStats();
+        //user.register();
+        if (user.login()) {
+            user.chooseSetting();
+            user.displayStats();
+        }
     }
 }
+
+
+

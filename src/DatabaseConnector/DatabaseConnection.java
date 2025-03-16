@@ -68,10 +68,14 @@ public class DatabaseConnection {
                 }
             }
         } catch (SQLException e) {
+            System.out.println("Database error in getPassword: " + e.getMessage());
             e.printStackTrace();
         }
         return null;
     }
+    
+    
+    
 
     public static boolean phoneNumberExists(String phoneNumber) {
         String selectSql = "SELECT * FROM newusers WHERE phone_number = ?";
@@ -110,6 +114,37 @@ public class DatabaseConnection {
                 return resultSet.next();
             }
         } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean updatePassword(String username, String newPassword) {
+        String updateSql = "UPDATE newusers SET password = ? WHERE username = ?";
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(updateSql)) {
+            
+            preparedStatement.setString(1, newPassword);
+            preparedStatement.setString(2, username);
+    
+            int rowsUpdated = preparedStatement.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (SQLException e) {
+            System.out.println("Error updating password: " + e.getMessage());
+            return false;
+        }
+    }
+    
+    public static boolean updateUsername(String oldUsername, String newUsername) {
+        String updateSql = "UPDATE newusers SET username = ? WHERE username = ?";
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(updateSql)) {
+            preparedStatement.setString(1, newUsername);
+            preparedStatement.setString(2, oldUsername);
+            int rowsUpdated = preparedStatement.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (SQLException e) {
+            System.out.println("Database error in updateUsername: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
