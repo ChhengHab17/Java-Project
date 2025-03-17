@@ -1,5 +1,6 @@
 package Expense;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class ExpenseManager {
@@ -10,7 +11,7 @@ public class ExpenseManager {
         expenseList = new ArrayList<>();
     }
 
-    public void addExpense(String category, double amount, String date, String currency) {
+    public void addExpense(String category, double amount, LocalDate date, String currency) {
         Expense expense = new Expense(category, amount, date, currency);
         expenseList.add(expense);
         System.out.println("Expense added successfully: " + amount + currency);
@@ -66,7 +67,7 @@ public class ExpenseManager {
         }
     }
 
-    public void editExpense(String category, double newAmount, String newDate) {
+    public void editExpense(String category, double newAmount, LocalDate newDate) {
         boolean found = false;
         for (Expense expense : expenseList) {
             if (expense.getCategory().equalsIgnoreCase(category)) {

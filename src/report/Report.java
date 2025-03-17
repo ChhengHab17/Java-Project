@@ -116,8 +116,9 @@ public class Report {
             contentStream.showText("Expenses: ");
             contentStream.endText();
             startY -= lineHeight;
-            
+            expenses = ReportScript.getExpensesByDateRange(startDate, endDate);
             for (Expense expense : expenses) {
+                totalExpenses += expense.getCurrency().equalsIgnoreCase("KHR") ? expense.getAmountInKHR() : expense.getAmountInUSD();
                 contentStream.beginText();
                 contentStream.newLineAtOffset(margin + 20, startY);
                 contentStream.showText(expense.toString());
@@ -125,6 +126,7 @@ public class Report {
                 startY -= lineHeight;
             }
             //total Expense
+
             String totalText = "Total: $" + totalExpenses;
             float totalWidth = font.getStringWidth(totalText) / 1000 * 14;
             float totalX = pageWidth - margin - totalWidth;
