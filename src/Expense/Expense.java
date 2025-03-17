@@ -1,14 +1,16 @@
 package Expense;
 
+import java.time.LocalDate;
+
 import report.Category;
 
 public class Expense {
     private Category category;
     private double amount;
-    private String date;
+    private LocalDate date;
     private String currency;
 
-    public Expense(Category category, double amount, String date, String currency) {
+    public Expense(Category category, double amount, LocalDate date, String currency) {
         this.category = category;
         this.amount = amount;
         this.date = date;
@@ -31,11 +33,11 @@ public class Expense {
         this.amount = amount;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
@@ -54,6 +56,13 @@ public class Expense {
             return amount / 4100.0;
         }
         return 0.0;
+    }
+
+    @Override
+    public String toString() {
+        // TODO Auto-generated method stub
+        return String.format("%s: %.2f %s (%s)",
+            category, amount, currency, date);
     }
 
     public String getDetails() {

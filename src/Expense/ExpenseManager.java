@@ -1,7 +1,8 @@
 package Expense;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Locale.Category;
+import report.Category;
 
 public class ExpenseManager {
     private ArrayList<Expense> expenseList;
@@ -11,7 +12,7 @@ public class ExpenseManager {
         expenseList = new ArrayList<>();
     }
 
-    public void addExpense(Category category, double amount, String date, String currency) {
+    public void addExpense(Category category, double amount, LocalDate date, String currency) {
     Expense expense = new Expense(category, amount, date, currency);
     expenseList.add(expense);
     System.out.println("Expense added successfully: " + expense.getDetails());
@@ -46,7 +47,7 @@ public class ExpenseManager {
         System.out.println("KHR: " + totalKHR + "៛");
     }
 
-    public void editExpense(Category category, double newAmount, String newDate) {
+    public void editExpense(Category category, double newAmount, LocalDate newDate) {
         boolean found = false;
         for (Expense expense : expenseList) {
             if (expense.getCategory().equals(category)) {
