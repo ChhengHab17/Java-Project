@@ -6,6 +6,7 @@ import Expense.*;
 import report.*;
 import Systemsetting.*;
 import UserManagement.User;
+import budget.*;
 
 import java.time.LocalDate;
 
@@ -221,12 +222,63 @@ public class App {
         }
     }
     public void settingMenu(){
+
+    }
+    public void budgetMenu(){
+        Scanner scanner = new Scanner(System.in);
+        BudgetManager budget = new BudgetManager();
+        while(true){
+            System.out.println("\nMenu:");
+            System.out.println("1. Set Budget");
+            System.out.println("2. Edit Budget");
+            System.out.println("3. View Budget");
+            System.out.println("4. Delete Budget");
+            System.out.println("5. Exit");
+            System.out.print("Choose an option: ");
+            try {
+                int choice = Integer.parseInt(scanner.nextLine());
+                switch (choice) {
+                    case 1:
+                        // Set budget logic
+                        System.out.print("Enter weekly budget: ");
+                        double weekly = scanner.nextInt();
+                        System.out.print("Enter monthly budget: ");
+                        double monthly = scanner.nextInt();
+                        budget.createBudget(weekly, monthly);
+                        break;
+                    case 2:
+                        // Edit budget logic
+                        System.out.println("Enter new budget: ");
+                        double newWeekly = scanner.nextDouble();
+                        double newMonthly = scanner.nextDouble();
+                        budget.modifyBudget(newWeekly, newMonthly);
+
+                        break;
+                    case 3:
+                        // view budget logic
+                        budget.showBudget();
+                        break;
+                    case 4:
+                        // Delete budget logic\
+                        budget.removeBudget();
+                        break;
+                    case 5:
+                        System.out.println("Exiting...");
+                        scanner.close();
+                        System.exit(0);
+                    default:
+                        System.out.println("Invalid choice. Please select again.");
         
+                }
+            }catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number.");
+            }
+        }
     }
 
     public static void main(String[] args) throws Exception {
         App app = new App();
-        app.userMenu();
+        app.budgetMenu();
         // app.expenseMenu();
     }
 }
