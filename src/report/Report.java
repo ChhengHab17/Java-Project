@@ -118,7 +118,7 @@ public class Report {
             startY -= lineHeight;
             expenses = ReportScript.getExpensesByDateRange(startDate, endDate);
             for (Expense expense : expenses) {
-                totalExpenses += expense.getCurrency().equalsIgnoreCase("KHR") ? expense.getAmountInKHR() : expense.getAmountInUSD();
+                totalExpenses += expense.getAmount();
                 contentStream.beginText();
                 contentStream.newLineAtOffset(margin + 20, startY);
                 contentStream.showText(expense.toString());
