@@ -15,7 +15,9 @@ public class User extends Person {
         this.username = username;
         this.password = password;
     }
+    
 
+    //Register trv kae thaem tt not like this
     public void register() {
         Scanner scanner = new Scanner(System.in);
         try {
@@ -76,6 +78,7 @@ public class User extends Person {
         try {
             System.out.print("Enter username: ");
             String enteredUsername = scanner.nextLine();
+            //Todo : Login with email
             System.out.print("Enter password: ");
             String enteredPassword = scanner.nextLine();
     
@@ -127,10 +130,7 @@ public class User extends Person {
                     userSetting.changeUsername(); // Call the changeUsername method
                     break;
                 case 3:
-                    System.out.println("Change Phone Number feature not implemented yet.");
-                    break;
-                case 4:
-                    System.out.println("Change Email feature not implemented yet.");
+                    userSetting.changePhonenumber(); // Call the changePhoneNumber method
                     break;
                 default:
                     System.out.println("Invalid choice. Please select a valid option.");
@@ -141,7 +141,7 @@ public class User extends Person {
     }
         public static void main(String[] args) {
         User user = new User("", "", "", "", "", "", "", "");
-        //user.register();
+        user.register();
         if (user.login()) {
             user.chooseSetting();
             user.displayStats();

@@ -74,9 +74,6 @@ public class DatabaseConnection {
         return null;
     }
     
-    
-    
-
     public static boolean phoneNumberExists(String phoneNumber) {
         String selectSql = "SELECT * FROM newusers WHERE phone_number = ?";
         try (Connection connection = getConnection();
@@ -145,6 +142,21 @@ public class DatabaseConnection {
             return rowsUpdated > 0;
         } catch (SQLException e) {
             System.out.println("Database error in updateUsername: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean updatePhonenumber(String username, String newPhonenumber ){
+        String updateSql = "UPDATE newusers SET phone_number = ? WHERE username = ?";
+        try (Connection connection = getConnection();
+         PreparedStatement preparedStatement = connection.prepareStatement(updateSql)){
+            preparedStatement.setString(1, newPhonenumber);
+            preparedStatement.setString(2, username);
+            int rowsUpdated = preparedStatement.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (SQLException e){
+            System.out.println("Database error in updatePhonenumber: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
