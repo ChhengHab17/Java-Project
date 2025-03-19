@@ -2,6 +2,7 @@ package Expense;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import report.Category;
 
 public class ExpenseManager {
     private ArrayList<Expense> expenseList;
@@ -11,66 +12,45 @@ public class ExpenseManager {
         expenseList = new ArrayList<>();
     }
 
-    public void addExpense(String category, double amount, LocalDate date, String currency) {
-        Expense expense = new Expense(category, amount, date, currency);
-        expenseList.add(expense);
-        System.out.println("Expense added successfully: " + amount + currency);
-    }
+    public void addExpense(Category category, double amount, LocalDate date, String currency) {
+    Expense expense = new Expense(category, amount, date, currency);
+    expenseList.add(expense);
+    System.out.println("Expense added successfully: " + expense.getDetails());
+}
+
 
     public void viewExpenses() {
         if (expenseList.isEmpty()) {
             System.out.println("No expenses recorded.");
         } else {
+            System.out.println("\nExpense List:");
             for (Expense expense : expenseList) {
-                System.out.println(expense.getDetails());
+                double amountInUSD = expense.getAmountInUSD();
+                double amountInKHR = amountInUSD * EXCHANGE_RATE;
+
+                System.out.println(expense.getDetails() + 
+                                " | USD: $" + amountInUSD + 
+                                " | KHR: " + amountInKHR + "៛");
             }
         }
-
-        System.out.println("Expenses in USD: $" + getTotalUSD());
-        System.out.println("Expenses in KHR: RIEL" + getTotalKHR());
     }
-                
-                    private String getTotalUSD() {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException("Unimplemented method 'getTotalUSD'");
-            }
         
-                    private String getTotalKHR() {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException("Unimplemented method 'getTotalKHR'");
-            }
-        
-        public void calculateTotal() {
+    public void calculateTotal() {
         double totalUSD = 0;
         for (Expense expense : expenseList) {
             totalUSD += expense.getAmountInUSD();
         }
-
-
         double totalKHR = totalUSD * EXCHANGE_RATE;
 
-        System.out.println("Total Expenses in USD: $" + totalUSD + " (KHR " + totalKHR + ")");
-    }
-    
-    public void deleteExpense(String category) {
-        boolean deleted = false;
-        for (int i = 0; i < expenseList.size(); i++) {
-            if (expenseList.get(i).getCategory().equalsIgnoreCase(category)) {
-                expenseList.remove(i);
-                System.out.println("Expense in category \"" + category + "\" deleted.");
-                deleted = true;
-                break;
-            }
-        }
-        if (!deleted) {
-            System.out.println("No expense found for category: " + category);
-        }
+        System.out.println("\nTotal Expenses:");
+        System.out.println("USD: $" + totalUSD);
+        System.out.println("KHR: " + totalKHR + "៛");
     }
 
-    public void editExpense(String category, double newAmount, LocalDate newDate) {
+    public void editExpense(Category category, double newAmount, LocalDate newDate) {
         boolean found = false;
         for (Expense expense : expenseList) {
-            if (expense.getCategory().equalsIgnoreCase(category)) {
+            if (expense.getCategory().equals(category)) {
                 expense.setAmount(newAmount);
                 expense.setDate(newDate);
                 System.out.println("Expense updated successfully.");
@@ -79,8 +59,22 @@ public class ExpenseManager {
             }
         }
         if (!found) {
-            System.out.println("No expense found for category: " + category);
+            System.out.println("No expense found for category: " + category.getName());
         }
     }
     
+    public void deleteExpense(Category category) {
+        boolean deleted = false;
+        for (int i = 0; i < expenseList.size(); i++) {
+            if (expenseList.get(i).getCategory().equals(category)) {
+                expenseList.remove(i);
+                System.out.println("Expense in category \"" + category.getName() + "\" deleted.");
+                deleted = true;
+                break;
+            }
+        }
+        if (!deleted) {
+            System.out.println("No expense found for category: " + category.getName());
+        }
+    }    
 }
