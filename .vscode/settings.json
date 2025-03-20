@@ -2,6 +2,9 @@
     "java.project.sourcePaths": ["src"],
     "java.project.outputPath": "bin",
     "java.project.referencedLibraries": [
-        "lib/**/*.jar"
+        "lib/**/*.jar",
+        "d:\\Year2Term2\\OOP\\Library\\pdfbox-2.0.27.jar",
+        "d:\\Year2Term2\\OOP\\Library\\commons-logging-1.2.jar",
+        "d:\\Year2Term2\\OOP\\Library\\mysql-connector-j-9.2.0.jar"
     ]
 }

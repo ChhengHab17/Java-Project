@@ -30,6 +30,9 @@ public class App {
                     case 1:
                         System.out.print("Enter category: ");
                         String category = scanner.nextLine();
+                        System.out.println("Enter description: ");
+                        String description = scanner.nextLine();
+                        Category newCategory = new Category(category, description);
 
                         // Handle invalid input for amount (non-numeric values)
                         double amount = 0;
@@ -44,14 +47,14 @@ public class App {
                         }
 
                         System.out.print("Enter date (YYYY-MM-DD): ");
-                        String date = scanner.nextLine();
+                        LocalDate date = LocalDate.parse(scanner.nextLine());
 
                         // Handle currency input (although we default to USD, it's good practice to validate)
-                        System.out.print("Enter currency (USD): ");
+                        System.out.print("Enter currency (USD/KHR): ");
                         String currency = scanner.nextLine();
 
                         // Add the expense
-                        expenseManager.addExpense(category, amount, date, currency);
+                        expenseManager.addExpense(newCategory, amount, date, currency);
                         break;
 
                     case 2:
@@ -64,7 +67,7 @@ public class App {
 
                     case 4:
                         System.out.println("Exiting!");
-                        scanner.close();
+                        // scanner.close();
                         return;
 
                     default:
@@ -168,7 +171,7 @@ public class App {
 
                     case 5:
                         System.out.println("Exiting!");
-                        scanner.close();
+                        // scanner.close();
                         return;
 
                     default:
@@ -211,7 +214,7 @@ public class App {
                         break;
                     case 4:
                         System.out.println("Exiting...");
-                        scanner.close();
+                        // scanner.close();
                         System.exit(0);
                     default:
                         System.out.println("Invalid choice. Please select again.");
@@ -264,7 +267,7 @@ public class App {
                         break;
                     case 5:
                         System.out.println("Exiting...");
-                        scanner.close();
+                        // scanner.close();
                         System.exit(0);
                     default:
                         System.out.println("Invalid choice. Please select again.");
@@ -278,7 +281,7 @@ public class App {
     public void mainMenu() {
         while (true) {
             Scanner scanner = new Scanner(System.in);
-            System.out.println("\n📌 Main Menu:");
+            System.out.println("\n Main Menu:");
             System.out.println("1. Expense Management");
             System.out.println("2. Report Management");
             System.out.println("3. Budget Management");
@@ -323,7 +326,7 @@ public class App {
         App app = new App();
         System.out.println("Welcome to Expense Tracker!");
         
-            app.userMenu();
+            // app.userMenu();
             app.mainMenu();
         
     }
