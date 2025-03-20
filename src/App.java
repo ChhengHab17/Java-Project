@@ -275,10 +275,56 @@ public class App {
             }
         }
     }
+    public void mainMenu() {
+        while (true) {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("\n📌 Main Menu:");
+            System.out.println("1. Expense Management");
+            System.out.println("2. Report Management");
+            System.out.println("3. Budget Management");
+            System.out.println("4. System Settings");
+            System.out.println("5. Logout");
+            System.out.println("6. Exit");
+            System.out.print("Enter your choice: ");
+            
+            try {
+                int choice = Integer.parseInt(scanner.nextLine());
+                switch (choice) {
+                    case 1:
+                        expenseMenu();
+                        break;
+                    case 2:
+                        reportMenu();
+                        break;
+                    case 3:
+                        budgetMenu();
+                        break;
+                    case 4:
+                        settingMenu();
+                        break;
+                    case 5:
+                        System.out.println("Logging out...");
+                        userMenu();  // Redirect to login/register menu
+                        break;
+                    case 6:
+                        System.out.println("Exiting application...");
+                        scanner.close();
+                        System.exit(0);
+                    default:
+                        System.out.println("Invalid choice. Please select again.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number.");
+            }
+        }
+    }
 
     public static void main(String[] args) throws Exception {
         App app = new App();
-        app.budgetMenu();
-        // app.expenseMenu();
+        System.out.println("Welcome to Expense Tracker!");
+        
+            app.userMenu();
+            app.mainMenu();
+        
     }
 }
