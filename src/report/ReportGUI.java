@@ -1,31 +1,36 @@
 package report;
 
 import javax.swing.*;
+
+import Main.AppGui;
+
 import java.awt.*;
 import java.time.LocalDate;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-
-public class ReportGUI extends JFrame {
+public class ReportGUI extends JPanel {
     private JLabel startDateLabel, endDateLabel, yearLabel, monthLabel;
     private JTextField idField, fileNamefield, startDateField, endDateField, yearField, monthField;
     private JComboBox<String> reportTypeCombo;
-    private JButton generateButton, displayButton;
+    private JButton generateButton, displayButton,backBtn;
     private JTextArea resultArea;
     JPanel inputPanel = new JPanel(new GridLayout(0, 2, 10, 10));
-    JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-    public ReportGUI() {
+    public ReportGUI(AppGui parent) {
 
-        setTitle("Report");
+        setName("Report");
         setSize(600,820);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(10, 10)); // BorderLayout for better control
 
         // === TOP PANEL (Form Fields in GridLayout) ===
         inputPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Padding
 
+        backBtn = new JButton("Back");
+        backBtn.addActionListener(e -> parent.switchPanel("Home"));
+        topPanel.add(backBtn);
+        topPanel.add(Box.createHorizontalStrut(150));
         reportTypeCombo = new JComboBox<>(new String[]{"Full Report", "Monthly Report", "Yearly Report", "Customizable Report"});
         topPanel.add(reportTypeCombo);
 
@@ -171,7 +176,5 @@ public class ReportGUI extends JFrame {
             return new Report(id, fileName);
         }
     }
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(ReportGUI::new);
-    }
+    
 }

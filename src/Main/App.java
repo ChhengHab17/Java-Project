@@ -1,3 +1,4 @@
+package Main;
 import java.util.InputMismatchException;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
@@ -12,9 +13,9 @@ import java.time.LocalDate;
 
 public class App {
 
+    Scanner scanner = new Scanner(System.in);
     public void expenseMenu() {
         ExpenseManager expenseManager = new ExpenseManager();
-        Scanner scanner = new Scanner(System.in);
 
         while (true) {
             try {
@@ -92,7 +93,6 @@ public class App {
         LocalDate endDate = null;
         int month;
         int year;
-        Scanner scanner = new Scanner(System.in);
 
         while (true) {
             try {
@@ -214,7 +214,7 @@ public class App {
                         break;
                     case 4:
                         System.out.println("Exiting...");
-                        // scanner.close();
+                        scanner.close();
                         System.exit(0);
                     default:
                         System.out.println("Invalid choice. Please select again.");
@@ -228,7 +228,6 @@ public class App {
 
     }
     public void budgetMenu(){
-        Scanner scanner = new Scanner(System.in);
         BudgetManager budget = new BudgetManager();
         while(true){
             System.out.println("\nMenu:");
@@ -280,7 +279,7 @@ public class App {
     }
     public void mainMenu() {
         while (true) {
-            Scanner scanner = new Scanner(System.in);
+
             System.out.println("\n Main Menu:");
             System.out.println("1. Expense Management");
             System.out.println("2. Report Management");
@@ -328,6 +327,7 @@ public class App {
         
             // app.userMenu();
             app.mainMenu();
+            
         
     }
 }
