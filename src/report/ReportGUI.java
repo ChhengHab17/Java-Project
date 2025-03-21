@@ -1,32 +1,39 @@
 package report;
 
 import javax.swing.*;
+
+import Main.AppGui;
+
 import java.awt.*;
 import java.time.LocalDate;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 
-public class ReportGUI extends JFrame {
+public class ReportGUI extends JPanel {
+    private AppGui parentFrame;
     private JLabel startDateLabel, endDateLabel, yearLabel, monthLabel;
     private JTextField idField, fileNamefield, startDateField, endDateField, yearField, monthField;
     private JComboBox<String> reportTypeCombo;
-    private JButton generateButton, displayButton, retriveButton;
+    private JButton generateButton, displayButton, retriveButton, bacButton;
     private JTextArea resultArea;
     JPanel inputPanel = new JPanel(new GridLayout(0, 2, 10, 10));
-    JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-    public ReportGUI() {
-
-        setTitle("Report");
+    public ReportGUI(AppGui parentFrame) {
+        this.parentFrame = parentFrame;
+        setName("Report");
         setSize(600,820);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
         setLayout(new BorderLayout(10, 10)); // BorderLayout for better control
 
         // === TOP PANEL (Form Fields in GridLayout) ===
         inputPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Padding
 
         reportTypeCombo = new JComboBox<>(new String[]{"Full Report", "Monthly Report", "Yearly Report", "Customizable Report"});
+        bacButton = new JButton("Back");
+        topPanel.add(bacButton);
+        topPanel.add(Box.createHorizontalStrut(150));
         topPanel.add(reportTypeCombo);
 
         inputPanel.add(new JLabel("Report ID:"));
@@ -78,7 +85,7 @@ public class ReportGUI extends JFrame {
         add(scrollPane, BorderLayout.SOUTH);
 
         reportTypeCombo.addActionListener(e -> updateFields());
-
+        bacButton.addActionListener(e -> parentFrame.switchPanel("Home"));
         generateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -106,7 +113,7 @@ public class ReportGUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    ReportPopup popup = new ReportPopup(ReportGUI.this);
+                    ReportPopup popup = new ReportPopup(null);
                     popup.showPopup();
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -185,6 +192,6 @@ public class ReportGUI extends JFrame {
         }
     }
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(ReportGUI::new);
+        
     }
 }
