@@ -1,36 +1,31 @@
 package report;
 
 import javax.swing.*;
-
-import Main.AppGui;
-
 import java.awt.*;
 import java.time.LocalDate;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ReportGUI extends JPanel {
+
+public class ReportGUI extends JFrame {
     private JLabel startDateLabel, endDateLabel, yearLabel, monthLabel;
     private JTextField idField, fileNamefield, startDateField, endDateField, yearField, monthField;
     private JComboBox<String> reportTypeCombo;
-    private JButton generateButton, displayButton,backBtn;
+    private JButton generateButton, displayButton, retriveButton;
     private JTextArea resultArea;
     JPanel inputPanel = new JPanel(new GridLayout(0, 2, 10, 10));
-    JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
-    public ReportGUI(AppGui parent) {
+    public ReportGUI() {
 
-        setName("Report");
+        setTitle("Report");
         setSize(600,820);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(10, 10)); // BorderLayout for better control
 
         // === TOP PANEL (Form Fields in GridLayout) ===
         inputPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Padding
 
-        backBtn = new JButton("Back");
-        backBtn.addActionListener(e -> parent.switchPanel("Home"));
-        topPanel.add(backBtn);
-        topPanel.add(Box.createHorizontalStrut(150));
         reportTypeCombo = new JComboBox<>(new String[]{"Full Report", "Monthly Report", "Yearly Report", "Customizable Report"});
         topPanel.add(reportTypeCombo);
 
@@ -63,12 +58,13 @@ public class ReportGUI extends JPanel {
         inputPanel.add(monthField);
 
         idField.setPreferredSize(new Dimension(150,50));
-        // JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        retriveButton = new JButton("Retrieve PDF");
         generateButton = new JButton("Generate PDF");
         displayButton = new JButton("Display Report");
         inputPanel.add(generateButton);
         inputPanel.add(displayButton);
-
+        inputPanel.add(retriveButton);
+        
         // === BOTTOM PANEL (TextArea for Results) ===
         resultArea = new JTextArea(20, 40);
         resultArea.setEditable(false);
@@ -83,13 +79,11 @@ public class ReportGUI extends JPanel {
 
         reportTypeCombo.addActionListener(e -> updateFields());
 
-
         generateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     Report report = getReportFromInput();
-                    ReportScript.getExpensesByDateRange(getStartDate(), getEndDate());
                     report.generatePDF();
                     JOptionPane.showMessageDialog(null, "PDF Report Generated Successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
                 } catch (Exception ex) {
@@ -102,8 +96,18 @@ public class ReportGUI extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 try {
                     Report report = getReportFromInput();
-                    ReportScript.getExpensesByDateRange(getStartDate(), getEndDate());
-                    resultArea.setText(report.displayExpenses());
+                    resultArea.setText(report.toString());
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+        retriveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    ReportPopup popup = new ReportPopup(ReportGUI.this);
+                    popup.showPopup();
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
@@ -148,6 +152,7 @@ public class ReportGUI extends JPanel {
         }
         inputPanel.add(generateButton);
         inputPanel.add(displayButton);
+        inputPanel.add(retriveButton);
         
         inputPanel.revalidate(); // Refresh layout
         inputPanel.repaint();
@@ -158,12 +163,6 @@ public class ReportGUI extends JPanel {
         endDateField.setText("");
         yearField.setText("");
         monthField.setText("");
-    }
-    public LocalDate getStartDate(){
-        return LocalDate.parse(startDateField.getText());
-    }
-    public LocalDate getEndDate(){
-        return LocalDate.parse(endDateField.getText());
     }
     private Report getReportFromInput() throws Exception {
         int id = Integer.parseInt(idField.getText());
@@ -185,5 +184,7 @@ public class ReportGUI extends JPanel {
             return new Report(id, fileName);
         }
     }
-    
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(ReportGUI::new);
+    }
 }

@@ -27,7 +27,7 @@ public class Report {
         this.id = id;
         this.fileName = fileName;
         this.startDate = LocalDate.of(2021, 1, 1);
-        this.endDate = LocalDate.of(2021, 12, 31);
+        this.endDate = LocalDate.now();
         this.expenses = new ArrayList<>();
         this.totalExpenses = 0;
     }
@@ -48,23 +48,27 @@ public class Report {
     public String getDateRange(){
         return startDate + " - " + endDate;
     }
-
+    
     @Override
     public String toString() {
+        expenses = ReportScript.getExpensesByDateRange(startDate, endDate);
+        totalExpenses = expenses.stream().mapToDouble(Expense::getAmount).sum();
+        StringBuilder expenseDetails = new StringBuilder();
+    
+        if (expenses.isEmpty()) {
+            expenseDetails.append("No expenses recorded.");
+        } else {
+            for (Expense exp : expenses) {
+                expenseDetails.append(exp.toString()).append("\n"); // Add a new line after each expense
+            }
+        }
         return "Report: " + fileName + "\n" +
                "ID: " + id + "\n" +
                "Date Range: " + getDateRange() + "\n" +
-               "Expenses: " + (expenses.isEmpty() ? "No expenses recorded." : expenses) + "\n" +
+               "Expenses: " + "\n" + expenseDetails.toString() +
                "Total: $" + totalExpenses;
     }
-    public String displayExpenses() {
-        expenses = ReportScript.getExpensesByDateRange(startDate, endDate);
-        StringBuilder sb = new StringBuilder();
-        for (Expense expense : expenses) {
-            sb.append(expense.toString()).append("\n");
-        }
-        return sb.toString();
-    }
+    
     public String getTitle(){
         return "MainReport";
     }

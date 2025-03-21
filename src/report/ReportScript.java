@@ -68,6 +68,9 @@ public class ReportScript extends Report {
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
+                if (!outputFileName.toLowerCase().endsWith(".pdf")) {
+                    outputFileName += ".pdf";
+                }
                 File outputFile = new File(outputFileName);
                 FileOutputStream fos = new FileOutputStream(outputFile);
                 byte[] buffer = new byte[1024];
@@ -117,6 +120,6 @@ public class ReportScript extends Report {
 
     // Main method for testing
     public static void main(String[] args) {
-        
+        ReportScript.retrievePDF(1, "output.pdf");
     }
 }
