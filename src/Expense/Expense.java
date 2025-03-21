@@ -1,20 +1,26 @@
 package Expense;
 
 import java.time.LocalDate;
-
 import report.Category;
 
 public class Expense {
+    private static int idCounter = 0;
+    private int expenseid;
     private Category category;
     private double amount;
     private LocalDate date;
     private String currency;
 
     public Expense(Category category, double amount, LocalDate date, String currency) {
+        this.expenseid = ++idCounter;
         this.category = category;
         this.amount = amount;
         this.date = date;
         this.currency = currency;
+    }
+
+    public int getId() {
+        return expenseid;
     }
 
     public Category getCategory() {
@@ -60,7 +66,6 @@ public class Expense {
 
     @Override
     public String toString() {
-        // TODO Auto-generated method stub
         return String.format("%s: %.2f %s (%s)",
             category, amount, currency, date);
     }
