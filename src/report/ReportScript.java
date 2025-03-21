@@ -117,11 +117,6 @@ public class ReportScript extends Report {
 
     // Main method for testing
     public static void main(String[] args) {
-        ReportScript report1 = new ReportScript(1, "Custom_Report", LocalDate.of(2025, 3, 9), LocalDate.of(2025, 3, 20));
-        // report1.saveToDatabase(); // Save to the database
-        ReportScript.getExpensesByDateRange(LocalDate.of(2025, 3, 12), LocalDate.of(2025, 3, 20));
-        System.out.println(ReportScript.getExpensesByDateRange(LocalDate.of(2025, 3, 12), LocalDate.of(2025, 3, 20)));
-        report1.generatePDF(); // Generate the PDF
-        // ReportScript.retrievePDF(1, "report.pdf");
+        
     }
 }
