@@ -57,6 +57,14 @@ public class Report {
                "Expenses: " + (expenses.isEmpty() ? "No expenses recorded." : expenses) + "\n" +
                "Total: $" + totalExpenses;
     }
+    public String displayExpenses() {
+        expenses = ReportScript.getExpensesByDateRange(startDate, endDate);
+        StringBuilder sb = new StringBuilder();
+        for (Expense expense : expenses) {
+            sb.append(expense.toString()).append("\n");
+        }
+        return sb.toString();
+    }
     public String getTitle(){
         return "MainReport";
     }

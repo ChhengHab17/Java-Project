@@ -83,11 +83,13 @@ public class ReportGUI extends JPanel {
 
         reportTypeCombo.addActionListener(e -> updateFields());
 
+
         generateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     Report report = getReportFromInput();
+                    ReportScript.getExpensesByDateRange(getStartDate(), getEndDate());
                     report.generatePDF();
                     JOptionPane.showMessageDialog(null, "PDF Report Generated Successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
                 } catch (Exception ex) {
@@ -100,7 +102,8 @@ public class ReportGUI extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 try {
                     Report report = getReportFromInput();
-                    resultArea.setText(report.toString());
+                    ReportScript.getExpensesByDateRange(getStartDate(), getEndDate());
+                    resultArea.setText(report.displayExpenses());
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
@@ -155,6 +158,12 @@ public class ReportGUI extends JPanel {
         endDateField.setText("");
         yearField.setText("");
         monthField.setText("");
+    }
+    public LocalDate getStartDate(){
+        return LocalDate.parse(startDateField.getText());
+    }
+    public LocalDate getEndDate(){
+        return LocalDate.parse(endDateField.getText());
     }
     private Report getReportFromInput() throws Exception {
         int id = Integer.parseInt(idField.getText());
