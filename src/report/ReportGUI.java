@@ -19,6 +19,7 @@ public class ReportGUI extends JPanel {
     private JTextArea resultArea;
     JPanel inputPanel = new JPanel(new GridLayout(0, 2, 10, 10));
     JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    JPanel buttonPanel = new JPanel(new GridLayout(2,1,10,10));
 
     public ReportGUI(AppGui parentFrame) {
         this.parentFrame = parentFrame;
@@ -68,10 +69,11 @@ public class ReportGUI extends JPanel {
         retriveButton = new JButton("Retrieve PDF");
         generateButton = new JButton("Generate PDF");
         displayButton = new JButton("Display Report");
-        inputPanel.add(generateButton);
+        buttonPanel.add(generateButton);
+        buttonPanel.add(retriveButton);
         inputPanel.add(displayButton);
-        inputPanel.add(retriveButton);
-        
+        inputPanel.add(buttonPanel);
+
         // === BOTTOM PANEL (TextArea for Results) ===
         resultArea = new JTextArea(20, 40);
         resultArea.setEditable(false);
@@ -157,9 +159,10 @@ public class ReportGUI extends JPanel {
             inputPanel.add(endDateLabel);
             inputPanel.add(endDateField);
         }
-        inputPanel.add(generateButton);
+        buttonPanel.add(generateButton);
+        buttonPanel.add(retriveButton);
+        inputPanel.add(buttonPanel);
         inputPanel.add(displayButton);
-        inputPanel.add(retriveButton);
         
         inputPanel.revalidate(); // Refresh layout
         inputPanel.repaint();

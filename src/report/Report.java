@@ -148,7 +148,8 @@ public class Report {
             contentStream.showText(totalText);
             contentStream.endText();
             contentStream.close();
-            document.save(fileName + ".pdf");
+            String desktopPath = System.getProperty("user.home") + "/Desktop/";
+            document.save(desktopPath + fileName + ".pdf");
             document.close();
             System.out.println("PDF generated successfully.");
 
