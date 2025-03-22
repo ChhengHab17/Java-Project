@@ -1,14 +1,13 @@
 package Expense;
 
-import Expense.ExpenseManager;
-import report.Category;
-import Expense.Expense;
 import java.awt.*;
 import java.awt.event.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import java.sql.*;
 
 public class ExpenseGUI extends JPanel {
     private ExpenseManager expenseManager;
@@ -19,8 +18,10 @@ public class ExpenseGUI extends JPanel {
 
     public ExpenseGUI() {
         expenseManager = new ExpenseManager();
-        
-        // Top Panel for input fields
+
+        setLayout(new BorderLayout());
+
+        // Top Panel for Input Fields
         JPanel inputPanel = new JPanel(new GridLayout(5, 2, 5, 5));
         TitledBorder border = BorderFactory.createTitledBorder("Expense");
         border.setTitleFont(new Font("Arial", Font.BOLD, 28));
@@ -49,12 +50,12 @@ public class ExpenseGUI extends JPanel {
 
         add(inputPanel, BorderLayout.NORTH);
 
-        // Center Table for displaying expenses
-        tableModel = new DefaultTableModel(new String[]{"Category", "Description", "Amount", "Currency", "Date"}, 0);
+        // Table for displaying expenses
+        tableModel = new DefaultTableModel(new String[]{"ID", "Category", "Description", "Amount", "Currency", "Date"}, 0);
         expenseTable = new JTable(tableModel);
         add(new JScrollPane(expenseTable), BorderLayout.CENTER);
 
-        // Bottom Panel for buttons and totals
+        // Bottom Panel (Buttons & Totals)
         JPanel bottomPanel = new JPanel(new GridLayout(2, 1));
 
         JPanel buttonPanel = new JPanel(new GridLayout(1, 4, 5, 5));
@@ -69,9 +70,9 @@ public class ExpenseGUI extends JPanel {
         buttonPanel.add(btnDelete);
         bottomPanel.add(buttonPanel);
 
-        // Panel for displaying totals
+        // Panel for Total Expenses
         JPanel totalPanel = new JPanel(new GridLayout(1, 2));
-        lblTotalUSD = new JLabel("Total USD: $0.0");
+        lblTotalUSD = new JLabel("Total USD: $0.00");
         lblTotalKHR = new JLabel("Total KHR: 0៛");
         totalPanel.add(lblTotalUSD);
         totalPanel.add(lblTotalKHR);
@@ -90,14 +91,18 @@ public class ExpenseGUI extends JPanel {
 
     private void addExpense() {
         try {
-            String categoryName = txtCategory.getText();
+            String category = txtCategory.getText();
             String description = txtDescription.getText();
             double amount = Double.parseDouble(txtAmount.getText());
-            String currency = txtCurrency.getText();
+            String currency = txtCurrency.getText().toUpperCase();
             LocalDate date = LocalDate.parse(txtDate.getText());
 
-            Category category = new Category(categoryName, description);
-            expenseManager.addExpense(category, amount, date, currency);
+            if (!currency.equals("USD") && !currency.equals("KHR")) {
+                JOptionPane.showMessageDialog(this, "Currency must be 'USD' or 'KHR'.");
+                return;
+            }
+
+            expenseManager.addExpense(category, description, amount, date, currency);
             JOptionPane.showMessageDialog(this, "Expense added successfully!");
 
             clearFields();
@@ -109,14 +114,22 @@ public class ExpenseGUI extends JPanel {
 
     private void viewExpenses() {
         tableModel.setRowCount(0); // Clear previous data
-        for (Expense expense : expenseManager.getExpenses()) {
-            tableModel.addRow(new Object[]{
-                expense.getCategory().getName(),
-                expense.getCategory().getDescription(),
-                expense.getAmount(),
-                expense.getCurrency(),
-                expense.getDate()
-            });
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/expense", "root", "");
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT * FROM expense")) {
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String category = rs.getString("category");
+                String description = rs.getString("description");
+                double amount = rs.getDouble("amount");
+                String currency = rs.getString("currency");
+                LocalDate date = rs.getDate("date").toLocalDate();
+
+                tableModel.addRow(new Object[]{id, category, description, amount, currency, date});
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         updateTotal();
     }
@@ -128,20 +141,14 @@ public class ExpenseGUI extends JPanel {
             return;
         }
 
-        String categoryName = (String) tableModel.getValueAt(selectedRow, 0);
-        String description = (String) tableModel.getValueAt(selectedRow, 1);
-        Category category = new Category(categoryName, description);
-
+        int id = (int) tableModel.getValueAt(selectedRow, 0);
         try {
             double newAmount = Double.parseDouble(JOptionPane.showInputDialog("Enter new amount:"));
             LocalDate newDate = LocalDate.parse(JOptionPane.showInputDialog("Enter new date (YYYY-MM-DD):"));
 
-            if (expenseManager.editExpense(category, newAmount, newDate)) {
-                JOptionPane.showMessageDialog(this, "Expense updated successfully!");
-                viewExpenses();
-            } else {
-                JOptionPane.showMessageDialog(this, "Expense not found.");
-            }
+            expenseManager.editExpense(id, newAmount, newDate);
+            JOptionPane.showMessageDialog(this, "Expense updated successfully!");
+            viewExpenses();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Invalid input.");
         }
@@ -154,21 +161,33 @@ public class ExpenseGUI extends JPanel {
             return;
         }
 
-        String categoryName = (String) tableModel.getValueAt(selectedRow, 0);
-        String description = (String) tableModel.getValueAt(selectedRow, 1);
-        Category category = new Category(categoryName, description);
+        int id = (int) tableModel.getValueAt(selectedRow, 0);
+        int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this expense?", "Confirm", JOptionPane.YES_NO_OPTION);
 
-        if (expenseManager.deleteExpense(category)) {
+        if (confirm == JOptionPane.YES_OPTION) {
+            expenseManager.deleteExpense(id);
             JOptionPane.showMessageDialog(this, "Expense deleted successfully!");
             viewExpenses();
-        } else {
-            JOptionPane.showMessageDialog(this, "Expense not found.");
         }
     }
 
     private void updateTotal() {
-        lblTotalUSD.setText("Total USD: $" + expenseManager.calculateTotalUSD());
-        lblTotalKHR.setText("Total KHR: " + expenseManager.calculateTotalKHR() + "៛");
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/expense", "root", "");
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(
+                     "SELECT SUM(CASE WHEN currency = 'USD' THEN amount ELSE amount / 4100 END) AS total_in_usd, " +
+                     "SUM(CASE WHEN currency = 'KHR' THEN amount ELSE amount * 4100 END) AS total_in_khr FROM expense")) {
+
+            if (rs.next()) {
+                double totalUSD = rs.getDouble("total_in_usd");
+                double totalKHR = rs.getDouble("total_in_khr");
+
+                lblTotalUSD.setText("Total USD: $" + String.format("%.2f", totalUSD));
+                lblTotalKHR.setText("Total KHR: " + String.format("%.2f", totalKHR) + "៛");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private void clearFields() {
