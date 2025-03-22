@@ -63,7 +63,7 @@ public class App {
                         break;
 
                     case 3:
-                        expenseManager.calculateTotal();
+                        expenseManager.calculateTotalUSD();
                         break;
 
                     case 4:

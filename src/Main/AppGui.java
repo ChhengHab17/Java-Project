@@ -1,6 +1,9 @@
 package Main;
 
 import javax.swing.*;
+
+import Expense.ExpenseGUI;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -21,10 +24,12 @@ public class AppGui extends JFrame{
 
         JPanel homePanel = createHomePanel();
         ReportGUI reportPanel = new ReportGUI(this);
+        ExpenseGUI expensePanel = new ExpenseGUI(this);
 
         mainPanel.setLayout(cardLayout);
         mainPanel.add("Home", homePanel);
         mainPanel.add("Report", reportPanel);
+        mainPanel.add("Expense", expensePanel);
 
         add(mainPanel);
         setVisible(true);
@@ -61,6 +66,6 @@ public class AppGui extends JFrame{
         cardLayout.show(mainPanel, panelName);
     }
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(AppGui::new);
+        new AppGui();
     }
 }
