@@ -73,7 +73,7 @@ public class ExpenseGUI extends JPanel {
 
         JPanel buttonPanel = new JPanel(new GridLayout(1, 4, 5, 5));
         JButton btnAdd = new JButton("Add");
-        JButton btnView = new JButton("View");
+        JButton btnView = new JButton("Reload");
         JButton btnEdit = new JButton("Edit");
         JButton btnDelete = new JButton("Delete");
 
