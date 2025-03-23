@@ -107,46 +107,34 @@ public class App {
 
                 switch (choice) {
                     case 1:
-                        System.out.print("Enter report id: ");
-                        id = scanner.nextInt();
-                        scanner.nextLine();
                         System.out.print("Enter report name: ");
                         name = scanner.nextLine();
-                        Report report = new Report(id, name);
+                        Report report = new Report(name);
                         // Generate the report
                         report.generatePDF();
                         break;
 
                     case 2:
-                        System.out.print("Enter report id: ");
-                        id = scanner.nextInt();
-                        scanner.nextLine();
                         System.out.print("Enter report name: ");
                         name = scanner.nextLine();
                         System.out.print("Enter Year: ");
                         year = scanner.nextInt();
                         System.out.print("Enter Month: ");
                         month = scanner.nextInt();
-                        MonthlyReport monthlyReport = new MonthlyReport(id, name, year, month);
+                        MonthlyReport monthlyReport = new MonthlyReport(name, year, month);
                         monthlyReport.generatePDF();
                         break;
 
                     case 3:
-                        System.out.print("Enter report id: ");
-                        id = scanner.nextInt();
-                        scanner.nextLine();
                         System.out.print("Enter report name: ");
                         name = scanner.nextLine();
                         System.out.print("Enter Year: ");
                         year = scanner.nextInt();
-                        YearlyReport yearlyReport = new YearlyReport(id, name, year);
+                        YearlyReport yearlyReport = new YearlyReport(name, year);
                         yearlyReport.generatePDF();
                         break;
 
                     case 4:
-                        System.out.print("Enter report id: ");
-                        id = scanner.nextInt();
-                        scanner.nextLine();
                         System.out.print("Enter report name: ");
                         name = scanner.nextLine();
 
@@ -165,7 +153,7 @@ public class App {
                         }
 
                         // Create and generate the custom report
-                        CustomizeReport customizeReport = new CustomizeReport(id, name, startDate, endDate);
+                        CustomizeReport customizeReport = new CustomizeReport(name, startDate, endDate);
                         customizeReport.generatePDF();
                         break;
 
