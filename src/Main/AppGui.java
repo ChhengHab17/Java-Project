@@ -10,6 +10,7 @@ import java.awt.event.*;
 public class AppGui extends JFrame {
     private JPanel mainPanel;
     private CardLayout cardLayout;
+    private ExpenseGUI expensePanel;
     ExpenseManager expenseManager = new ExpenseManager();
 
     public AppGui() {
@@ -23,7 +24,7 @@ public class AppGui extends JFrame {
 
         JPanel homePanel = createHomePanel();
         ReportGUI reportPanel = new ReportGUI(this);
-        ExpenseGUI expensePanel = new ExpenseGUI(this);
+        expensePanel = new ExpenseGUI(this);
 
         mainPanel.setLayout(cardLayout);
         mainPanel.add("Home", homePanel);
@@ -31,6 +32,7 @@ public class AppGui extends JFrame {
         mainPanel.add("Expense", expensePanel);
 
         add(mainPanel);
+
         setVisible(true);
     }
 
@@ -50,24 +52,8 @@ public class AppGui extends JFrame {
         JPanel contentPanel = new JPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
         contentPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        contentPanel.add(Box.createRigidArea(new Dimension(0, 100)));
     
-        // Expense Summary (Centered)
-        JPanel infoPanel = new JPanel();
-        infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
-        infoPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-    
-        JLabel expenseInKh = new JLabel("Expense in KHR: " + expenseManager.calculateTotalKHR() + "៛");
-        JLabel expenseInUsd = new JLabel("Expense in USD: " + expenseManager.calculateTotalUSD() + "$");
-    
-        expenseInKh.setAlignmentX(Component.CENTER_ALIGNMENT);
-        expenseInUsd.setAlignmentX(Component.CENTER_ALIGNMENT);
-    
-        infoPanel.add(expenseInKh);
-        infoPanel.add(expenseInUsd);
-        contentPanel.add(infoPanel);
-        contentPanel.add(Box.createRigidArea(new Dimension(0, 50)));
-        
-        contentPanel.add(Box.createRigidArea(new Dimension(0, 20))); // Add spacing
     
         // Buttons (Centered)
         JPanel buttonPanel = new JPanel();
@@ -97,6 +83,7 @@ public class AppGui extends JFrame {
         panel.add(contentPanel, BorderLayout.CENTER);
     
         return panel;
+
     }
     
     
@@ -119,7 +106,7 @@ public class AppGui extends JFrame {
     }
 
     public static void main(String[] args) {
-        new AppGui();
+        SwingUtilities.invokeLater(() -> new AppGui());
     }
 }
 

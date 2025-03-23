@@ -33,7 +33,7 @@ public class App {
                         String category = scanner.nextLine();
                         System.out.println("Enter description: ");
                         String description = scanner.nextLine();
-                        Category newCategory = new Category(category, description);
+
 
                         // Handle invalid input for amount (non-numeric values)
                         double amount = 0;
@@ -55,7 +55,7 @@ public class App {
                         String currency = scanner.nextLine();
 
                         // Add the expense
-                        expenseManager.addExpense(newCategory, amount, date, currency);
+                        expenseManager.addExpense(category, description, amount, date, currency);
                         break;
 
                     case 2:
@@ -63,7 +63,7 @@ public class App {
                         break;
 
                     case 3:
-                        expenseManager.calculateTotalUSD();
+                        expenseManager.calculateTotal();
                         break;
 
                     case 4:
