@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import DatabaseConnector.DatabaseConnection;
 
-
 public class Usersettinggui extends JPanel {
     private CardLayout cardLayout;
     private JPanel mainPanel;
@@ -19,40 +18,53 @@ public class Usersettinggui extends JPanel {
     private String loggedInUser; // Stores the logged-in username
 
     public Usersettinggui() {
+        setLayout(new BorderLayout());
+
+        // 🌟 HEADER: Expense Management System 🌟
+        JLabel headerLabel = new JLabel("Expense Management System", JLabel.CENTER);
+        headerLabel.setFont(new Font("SansSerif", Font.BOLD, 18));
+        headerLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
 
-        // Login Panel
+        // 🏠 Add panels
         JPanel loginPanel = createLoginPanel();
-        mainPanel.add(loginPanel, "Login");
-
-        // Menu Panel
         JPanel menuPanel = createMenuPanel();
+        JPanel changePasswordPanel = createChangePasswordPanel();
+        JPanel changeUsernamePanel = createChangeUsernamePanel();
+        JPanel changePhonePanel = createChangePhonePanel();
+
+        mainPanel.add(loginPanel, "Login");
         mainPanel.add(menuPanel, "Menu");
+        mainPanel.add(changePasswordPanel, "ChangePassword"); // ✅ Ensured it is added
+        mainPanel.add(changeUsernamePanel, "ChangeUsername");
+        mainPanel.add(changePhonePanel, "ChangePhone");
 
-        // Settings Panels
-        mainPanel.add(createChangePasswordPanel(), "ChangePassword");
-        mainPanel.add(createChangeUsernamePanel(), "ChangeUsername");
-        mainPanel.add(createChangePhonePanel(), "ChangePhone");
-
-        setLayout(new BorderLayout());
+        // 📌 Adding to Main Layout
+        add(headerLabel, BorderLayout.NORTH);
         add(mainPanel, BorderLayout.CENTER);
+
         cardLayout.show(mainPanel, "Login");
     }
 
     private JPanel createLoginPanel() {
-        JPanel panel = new JPanel(new GridLayout(3, 1, 5, 5));
+        JPanel panel = new JPanel(new GridBagLayout());
         panel.setBorder(BorderFactory.createTitledBorder("Login"));
 
-        loginUsernameField = new JTextField();
-        loginPasswordField = new JPasswordField();
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        loginUsernameField = new JTextField(15);
+        loginPasswordField = new JPasswordField(15);
         JButton loginButton = new JButton("Login");
 
-        panel.add(new JLabel("Username:"));
-        panel.add(loginUsernameField);
-        panel.add(new JLabel("Password:"));
-        panel.add(loginPasswordField);
-        panel.add(loginButton);
+        gbc.gridx = 0; gbc.gridy = 0; panel.add(new JLabel("Username:"), gbc);
+        gbc.gridx = 1; panel.add(loginUsernameField, gbc);
+        gbc.gridx = 0; gbc.gridy = 1; panel.add(new JLabel("Password:"), gbc);
+        gbc.gridx = 1; panel.add(loginPasswordField, gbc);
+        gbc.gridx = 0; gbc.gridy = 2; gbc.gridwidth = 2; panel.add(loginButton, gbc);
 
         loginButton.addActionListener(e -> loginUser());
 
@@ -101,18 +113,22 @@ public class Usersettinggui extends JPanel {
     }
 
     private JPanel createChangePasswordPanel() {
-        JPanel panel = new JPanel(new GridLayout(3, 1, 5, 5));
+        JPanel panel = new JPanel(new GridBagLayout());
         panel.setBorder(BorderFactory.createTitledBorder("Change Password"));
 
-        newPasswordField = new JPasswordField();
-        confirmPasswordField = new JPasswordField();
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        newPasswordField = new JPasswordField(15);
+        confirmPasswordField = new JPasswordField(15);
         JButton saveButton = new JButton("Save");
 
-        panel.add(new JLabel("New Password:"));
-        panel.add(newPasswordField);
-        panel.add(new JLabel("Confirm Password:"));
-        panel.add(confirmPasswordField);
-        panel.add(saveButton);
+        gbc.gridx = 0; gbc.gridy = 0; panel.add(new JLabel("New Password:"), gbc);
+        gbc.gridx = 1; panel.add(newPasswordField, gbc);
+        gbc.gridx = 0; gbc.gridy = 1; panel.add(new JLabel("Confirm Password:"), gbc);
+        gbc.gridx = 1; panel.add(confirmPasswordField, gbc);
+        gbc.gridx = 0; gbc.gridy = 2; gbc.gridwidth = 2; panel.add(saveButton, gbc);
 
         saveButton.addActionListener(e -> updatePassword());
 
@@ -123,7 +139,12 @@ public class Usersettinggui extends JPanel {
         String newPassword = new String(newPasswordField.getPassword());
         String confirmPassword = new String(confirmPasswordField.getPassword());
 
-        if (newPassword.isEmpty() || !newPassword.equals(confirmPassword)) {
+        if (newPassword.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Password cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (!newPassword.equals(confirmPassword)) {
             JOptionPane.showMessageDialog(this, "Passwords do not match!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -137,16 +158,57 @@ public class Usersettinggui extends JPanel {
         }
     }
 
-    private JPanel createChangeUsernamePanel() {
-        JPanel panel = new JPanel(new GridLayout(2, 1, 5, 5));
-        panel.setBorder(BorderFactory.createTitledBorder("Change Username"));
+    private JPanel createChangePhonePanel() {
+        JPanel panel = new JPanel(new GridBagLayout());
+        panel.setBorder(BorderFactory.createTitledBorder("Change Phone Number"));
 
-        newUsernameField = new JTextField();
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        newPhoneField = new JTextField(15);
         JButton saveButton = new JButton("Save");
 
-        panel.add(new JLabel("New Username:"));
-        panel.add(newUsernameField);
-        panel.add(saveButton);
+        gbc.gridx = 0; gbc.gridy = 0; panel.add(new JLabel("New Phone Number:"), gbc);
+        gbc.gridx = 1; panel.add(newPhoneField, gbc);
+        gbc.gridx = 0; gbc.gridy = 1; gbc.gridwidth = 2; panel.add(saveButton, gbc);
+
+        saveButton.addActionListener(e -> updatePhone());
+
+        return panel;
+    }
+
+    private void updatePhone() {
+        String newPhoneNumber = newPhoneField.getText();
+
+        if (newPhoneNumber.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Phone number cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        boolean success = DatabaseConnection.updatePhonenumber(loggedInUser, newPhoneNumber);
+        if (success) {
+            JOptionPane.showMessageDialog(this, "Phone number updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            cardLayout.show(mainPanel, "Menu");
+        } else {
+            JOptionPane.showMessageDialog(this, "Failed to update phone number.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private JPanel createChangeUsernamePanel() {
+        JPanel panel = new JPanel(new GridBagLayout());
+        panel.setBorder(BorderFactory.createTitledBorder("Change Username"));
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        newUsernameField = new JTextField(15);
+        JButton saveButton = new JButton("Save");
+
+        gbc.gridx = 0; gbc.gridy = 0; panel.add(new JLabel("New Username:"), gbc);
+        gbc.gridx = 1; panel.add(newUsernameField, gbc);
+        gbc.gridx = 0; gbc.gridy = 1; gbc.gridwidth = 2; panel.add(saveButton, gbc);
 
         saveButton.addActionListener(e -> updateUsername());
 
@@ -171,42 +233,9 @@ public class Usersettinggui extends JPanel {
         }
     }
 
-    private JPanel createChangePhonePanel() {
-        JPanel panel = new JPanel(new GridLayout(2, 1, 5, 5));
-        panel.setBorder(BorderFactory.createTitledBorder("Change Phone Number"));
-
-        newPhoneField = new JTextField();
-        JButton saveButton = new JButton("Save");
-
-        panel.add(new JLabel("New Phone Number:"));
-        panel.add(newPhoneField);
-        panel.add(saveButton);
-
-        saveButton.addActionListener(e -> updatePhone());
-
-        return panel;
-    }
-
-    private void updatePhone() {
-        String newPhoneNumber = newPhoneField.getText();
-
-        if (newPhoneNumber.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Phone number cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        boolean success = DatabaseConnection.updatePhonenumber(loggedInUser, newPhoneNumber);
-        if (success) {
-            JOptionPane.showMessageDialog(this, "Phone number updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-            cardLayout.show(mainPanel, "Menu");
-        } else {
-            JOptionPane.showMessageDialog(this, "Failed to update phone number.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("User Management");
+            JFrame frame = new JFrame("Expense Management System");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.getContentPane().add(new Usersettinggui());
             frame.setSize(400, 600);

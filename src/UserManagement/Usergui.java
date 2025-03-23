@@ -13,44 +13,43 @@ public class Usergui extends JPanel {
     private JPasswordField loginPasswordField, registerPasswordField, confirmPasswordField;
     private JComboBox<String> genderComboBox;
 
-    private String loggedInUser; // Stores the logged-in username
-
     public Usergui() {
+        setLayout(new BorderLayout());
+
+        // 🌟 HEADER: Expense Management System 🌟
+        JLabel headerLabel = new JLabel("Expense Management System", JLabel.CENTER);
+        headerLabel.setFont(new Font("SansSerif", Font.BOLD, 18));
+        headerLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        // 🔄 Main Content (CardLayout)
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
 
-        // Main Menu Panel
-        JPanel mainMenuPanel = createMainMenuPanel();
-        mainPanel.add(mainMenuPanel, "MainMenu");
+        // 🏠 Add panels
+        mainPanel.add(createMainMenuPanel(), "MainMenu");
+        mainPanel.add(createLoginPanel(), "Login");
+        mainPanel.add(createRegisterPanel(), "Register");
 
-        // Login Panel
-        JPanel loginPanel = createLoginPanel();
-        mainPanel.add(loginPanel, "Login");
-
-        // Register Panel
-        JPanel registerPanel = createRegisterPanel();
-        mainPanel.add(registerPanel, "Register");
-
-        // User Menu Panel
-        JPanel userMenuPanel = createUserMenuPanel();
-        mainPanel.add(userMenuPanel, "UserMenu");
-
-        setLayout(new BorderLayout());
+        // 📌 Adding to Main Layout
+        add(headerLabel, BorderLayout.NORTH); // 📌 Header at the Top
         add(mainPanel, BorderLayout.CENTER);
+
         cardLayout.show(mainPanel, "MainMenu");
     }
 
     private JPanel createMainMenuPanel() {
-        JPanel panel = new JPanel(new GridLayout(3, 1, 5, 5));
+        JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createTitledBorder("Main Menu"));
 
-        JButton registerButton = new JButton("Register New User");
+        JPanel buttonPanel = new JPanel(new GridLayout(3, 1, 10, 10));
+        JButton registerButton = new JButton("Register");
         JButton loginButton = new JButton("Login");
         JButton exitButton = new JButton("Exit");
 
-        panel.add(registerButton);
-        panel.add(loginButton);
-        panel.add(exitButton);
+        buttonPanel.add(registerButton);
+        buttonPanel.add(loginButton);
+        buttonPanel.add(exitButton);
+        panel.add(buttonPanel, BorderLayout.CENTER);
 
         registerButton.addActionListener(e -> cardLayout.show(mainPanel, "Register"));
         loginButton.addActionListener(e -> cardLayout.show(mainPanel, "Login"));
@@ -60,20 +59,23 @@ public class Usergui extends JPanel {
     }
 
     private JPanel createLoginPanel() {
-        JPanel panel = new JPanel(new GridLayout(4, 1, 5, 5));
+        JPanel panel = new JPanel(new GridBagLayout());
         panel.setBorder(BorderFactory.createTitledBorder("Login"));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        loginUsernameField = new JTextField();
-        loginPasswordField = new JPasswordField();
+        loginUsernameField = new JTextField(15);
+        loginPasswordField = new JPasswordField(15);
         JButton loginButton = new JButton("Login");
         JButton backButton = new JButton("Back");
 
-        panel.add(new JLabel("Username or Email:"));
-        panel.add(loginUsernameField);
-        panel.add(new JLabel("Password:"));
-        panel.add(loginPasswordField);
-        panel.add(loginButton);
-        panel.add(backButton);
+        gbc.gridx = 0; gbc.gridy = 0; panel.add(new JLabel("Username/Email:"), gbc);
+        gbc.gridx = 1; panel.add(loginUsernameField, gbc);
+        gbc.gridx = 0; gbc.gridy = 1; panel.add(new JLabel("Password:"), gbc);
+        gbc.gridx = 1; panel.add(loginPasswordField, gbc);
+        gbc.gridx = 0; gbc.gridy = 2; panel.add(loginButton, gbc);
+        gbc.gridx = 1; panel.add(backButton, gbc);
 
         loginButton.addActionListener(e -> loginUser());
         backButton.addActionListener(e -> cardLayout.show(mainPanel, "MainMenu"));
@@ -82,66 +84,47 @@ public class Usergui extends JPanel {
     }
 
     private JPanel createRegisterPanel() {
-        JPanel panel = new JPanel(new GridLayout(10, 2, 5, 5));
+        JPanel panel = new JPanel(new GridBagLayout());
         panel.setBorder(BorderFactory.createTitledBorder("Register"));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        registerFirstNameField = new JTextField();
-        registerLastNameField = new JTextField();
-        registerDobField = new JTextField();
+        registerFirstNameField = new JTextField(15);
+        registerLastNameField = new JTextField(15);
+        registerDobField = new JTextField(10);
         genderComboBox = new JComboBox<>(new String[]{"Male", "Female", "Other"});
-        registerPhoneNumberField = new JTextField();
-        registerEmailField = new JTextField();
-        registerUsernameField = new JTextField();
-        registerPasswordField = new JPasswordField();
-        confirmPasswordField = new JPasswordField();
+        registerPhoneNumberField = new JTextField(15);
+        registerEmailField = new JTextField(15);
+        registerUsernameField = new JTextField(15);
+        registerPasswordField = new JPasswordField(15);
+        confirmPasswordField = new JPasswordField(15);
         JButton registerButton = new JButton("Register");
         JButton backButton = new JButton("Back");
 
-        panel.add(new JLabel("First Name:"));
-        panel.add(registerFirstNameField);
-        panel.add(new JLabel("Last Name:"));
-        panel.add(registerLastNameField);
-        panel.add(new JLabel("Date of Birth (YYYY-MM-DD):"));
-        panel.add(registerDobField);
-        panel.add(new JLabel("Gender:"));
-        panel.add(genderComboBox);
-        panel.add(new JLabel("Phone Number:"));
-        panel.add(registerPhoneNumberField);
-        panel.add(new JLabel("Email:"));
-        panel.add(registerEmailField);
-        panel.add(new JLabel("Username:"));
-        panel.add(registerUsernameField);
-        panel.add(new JLabel("Password:"));
-        panel.add(registerPasswordField);
-        panel.add(new JLabel("Confirm Password:"));
-        panel.add(confirmPasswordField);
-        panel.add(registerButton);
-        panel.add(backButton);
+        gbc.gridx = 0; gbc.gridy = 0; panel.add(new JLabel("First Name:"), gbc);
+        gbc.gridx = 1; panel.add(registerFirstNameField, gbc);
+        gbc.gridx = 0; gbc.gridy = 1; panel.add(new JLabel("Last Name:"), gbc);
+        gbc.gridx = 1; panel.add(registerLastNameField, gbc);
+        gbc.gridx = 0; gbc.gridy = 2; panel.add(new JLabel("DOB (YYYY-MM-DD):"), gbc);
+        gbc.gridx = 1; panel.add(registerDobField, gbc);
+        gbc.gridx = 0; gbc.gridy = 3; panel.add(new JLabel("Gender:"), gbc);
+        gbc.gridx = 1; panel.add(genderComboBox, gbc);
+        gbc.gridx = 0; gbc.gridy = 4; panel.add(new JLabel("Phone Number:"), gbc);
+        gbc.gridx = 1; panel.add(registerPhoneNumberField, gbc);
+        gbc.gridx = 0; gbc.gridy = 5; panel.add(new JLabel("Email:"), gbc);
+        gbc.gridx = 1; panel.add(registerEmailField, gbc);
+        gbc.gridx = 0; gbc.gridy = 6; panel.add(new JLabel("Username:"), gbc);
+        gbc.gridx = 1; panel.add(registerUsernameField, gbc);
+        gbc.gridx = 0; gbc.gridy = 7; panel.add(new JLabel("Password:"), gbc);
+        gbc.gridx = 1; panel.add(registerPasswordField, gbc);
+        gbc.gridx = 0; gbc.gridy = 8; panel.add(new JLabel("Confirm Password:"), gbc);
+        gbc.gridx = 1; panel.add(confirmPasswordField, gbc);
+        gbc.gridx = 0; gbc.gridy = 9; panel.add(registerButton, gbc);
+        gbc.gridx = 1; panel.add(backButton, gbc);
 
         registerButton.addActionListener(e -> registerUser());
         backButton.addActionListener(e -> cardLayout.show(mainPanel, "MainMenu"));
-
-        return panel;
-    }
-
-    private JPanel createUserMenuPanel() {
-        JPanel panel = new JPanel(new GridLayout(4, 1, 5, 5));
-        panel.setBorder(BorderFactory.createTitledBorder("User Menu"));
-
-        JButton displayInfoButton = new JButton("Display Information");
-        JButton changeSettingsButton = new JButton("Change Settings");
-        JButton viewHistoryButton = new JButton("View Login History");
-        JButton logoutButton = new JButton("Logout");
-
-        panel.add(displayInfoButton);
-        panel.add(changeSettingsButton);
-        panel.add(viewHistoryButton);
-        panel.add(logoutButton);
-
-        displayInfoButton.addActionListener(e -> displayUserInfo());
-        changeSettingsButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "Settings not implemented yet."));
-        viewHistoryButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "Login history not implemented yet."));
-        logoutButton.addActionListener(e -> cardLayout.show(mainPanel, "MainMenu"));
 
         return panel;
     }
@@ -150,20 +133,11 @@ public class Usergui extends JPanel {
         String usernameOrEmail = loginUsernameField.getText();
         String password = new String(loginPasswordField.getPassword());
 
-        if (usernameOrEmail.isEmpty() || password.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please fill in all fields", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        boolean isValidUser = DatabaseConnection.userExists(usernameOrEmail, password) ||
-                DatabaseConnection.emailLogin(usernameOrEmail, password);
-
-        if (isValidUser) {
+        if (DatabaseConnection.userExists(usernameOrEmail, password) || DatabaseConnection.emailLogin(usernameOrEmail, password)) {
             JOptionPane.showMessageDialog(this, "Login successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
-            loggedInUser = usernameOrEmail;
-            cardLayout.show(mainPanel, "UserMenu");
+            // Proceed to dashboard
         } else {
-            JOptionPane.showMessageDialog(this, "Invalid credentials", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Invalid username or password!", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -171,35 +145,24 @@ public class Usergui extends JPanel {
         String firstName = registerFirstNameField.getText();
         String lastName = registerLastNameField.getText();
         String dob = registerDobField.getText();
-        String gender = (String) genderComboBox.getSelectedItem();
-        String phoneNumber = registerPhoneNumberField.getText();
+        String gender = genderComboBox.getSelectedItem().toString();
+        String phone = registerPhoneNumberField.getText();
         String email = registerEmailField.getText();
         String username = registerUsernameField.getText();
         String password = new String(registerPasswordField.getPassword());
         String confirmPassword = new String(confirmPasswordField.getPassword());
-
-        if (firstName.isEmpty() || lastName.isEmpty() || dob.isEmpty() || phoneNumber.isEmpty() ||
-                email.isEmpty() || username.isEmpty() || password.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please fill in all fields", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
 
         if (!password.equals(confirmPassword)) {
             JOptionPane.showMessageDialog(this, "Passwords do not match!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        boolean success = DatabaseConnection.insertUser(firstName, lastName, dob, gender, phoneNumber, email, username, password) > 0;
-        if (success) {
+        if (DatabaseConnection.insertUser(firstName, lastName, dob, gender, phone, email, username, password) > 0) {
             JOptionPane.showMessageDialog(this, "Registration successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
             cardLayout.show(mainPanel, "MainMenu");
         } else {
-            JOptionPane.showMessageDialog(this, "Failed to register user.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Registration failed!", "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }
-
-    private void displayUserInfo() {
-        JOptionPane.showMessageDialog(this, "Displaying user information for: " + loggedInUser, "User Info", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public static void main(String[] args) {
@@ -207,7 +170,7 @@ public class Usergui extends JPanel {
             JFrame frame = new JFrame("User Management");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.getContentPane().add(new Usergui());
-            frame.setSize(400, 600);
+            frame.setSize(500, 700);
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
         });
