@@ -3,8 +3,8 @@ package report;
 import java.time.LocalDate;
 
 public class CustomizeReport extends Report implements Pdfvalidate{
-    public CustomizeReport(int id, String fileName, LocalDate startDate, LocalDate endDate) {
-        super(id, fileName, startDate, endDate); // Pass directly to parent constructor
+    public CustomizeReport(String fileName, LocalDate startDate, LocalDate endDate) {
+        super(fileName, startDate, endDate); // Pass directly to parent constructor
     }
     public String getTitle(){
         return "Report";
@@ -17,7 +17,7 @@ public class CustomizeReport extends Report implements Pdfvalidate{
     }
     
     public static void main(String[] args) {
-        CustomizeReport customReport = new CustomizeReport(1, "Custom_Report", LocalDate.of(2025, 3, 1), LocalDate.of(2025, 3, 9)); 
+        CustomizeReport customReport = new CustomizeReport( "Custom_Report", LocalDate.of(2025, 3, 1), LocalDate.of(2025, 3, 9)); 
         customReport.generatePDF();
     }
 }

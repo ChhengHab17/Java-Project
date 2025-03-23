@@ -9,6 +9,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
 import Main.AppGui;
+import Main.Session;
 
 import java.sql.*;
 
@@ -129,24 +130,28 @@ public class ExpenseGUI extends JPanel {
     }
     private void viewExpenses() {
         tableModel.setRowCount(0); // Clear previous data
+        String sql = "SELECT * FROM expenses WHERE user_id = ?";
+        int userId = Session.getUserId(); // Get the current user's ID from the session
+    
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db", "root", "");
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM expenses")) {
-            while (rs.next()) {
-                int id = rs.getInt("id");
-                String category = rs.getString("category");
-                String description = rs.getString("description");
-                double amount = rs.getDouble("amount");
-                String currency = rs.getString("currency");
-                LocalDate date = rs.getDate("date").toLocalDate();
-                tableModel.addRow(new Object[]{id, category, description, amount, currency, date});
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, userId); // Set the user_id parameter in the SQL query
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    String category = rs.getString("category");
+                    String description = rs.getString("description");
+                    double amount = rs.getDouble("amount");
+                    String currency = rs.getString("currency");
+                    LocalDate date = rs.getDate("date").toLocalDate();
+                    tableModel.addRow(new Object[]{id, category, description, amount, currency, date});
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        updateTotal();
-    }
-    private void editExpense() {
+        updateTotal(); // Assuming this method updates the total expense after viewing
+    }    private void editExpense() {
         int selectedRow = expenseTable.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, "Please select an expense to edit.");
@@ -178,16 +183,30 @@ public class ExpenseGUI extends JPanel {
         }
     }
     public void updateTotal() {
+        int userId = Session.getUserId(); // Retrieve the logged-in user ID
+    
+        String sql = "SELECT " +
+                     "SUM(CASE WHEN currency = 'USD' THEN amount ELSE amount / 4100 END) AS total_in_usd, " +
+                     "SUM(CASE WHEN currency = 'KHR' THEN amount ELSE amount * 4100 END) AS total_in_khr " +
+                     "FROM expenses WHERE user_id = ?"; // Filter by user_id
+    
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db", "root", "");
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(
-                    "SELECT SUM(CASE WHEN currency = 'USD' THEN amount ELSE amount / 4100 END) AS total_in_usd, " +
-                    "SUM(CASE WHEN currency = 'KHR' THEN amount ELSE amount * 4100 END) AS total_in_khr FROM expenses")) {
-            if (rs.next()) {
-                double totalUSD = rs.getDouble("total_in_usd");
-                double totalKHR = rs.getDouble("total_in_khr");
-                lblTotalUSD.setText("Total USD: $" + String.format("%.2f", totalUSD));
-                lblTotalKHR.setText("Total KHR: " + String.format("%.2f", totalKHR) + "៛");
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, userId); // Set user ID in the query
+    
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    // Handle potential null values from the SUM() function
+                    double totalUSD = rs.getDouble("total_in_usd");
+                    if (rs.wasNull()) totalUSD = 0.0; // If it's null, set it to 0
+    
+                    double totalKHR = rs.getDouble("total_in_khr");
+                    if (rs.wasNull()) totalKHR = 0.0; // If it's null, set it to 0
+    
+                    // Update the labels with formatted values
+                    lblTotalUSD.setText("Total USD: $" + String.format("%.2f", totalUSD));
+                    lblTotalKHR.setText("Total KHR: " + String.format("%.2f", totalKHR) + "៛");
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();

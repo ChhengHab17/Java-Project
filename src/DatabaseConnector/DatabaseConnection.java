@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 import java.sql.PreparedStatement;
 
 public class DatabaseConnection {
-    private static final String URL = "jdbc:mysql://localhost:3306/test";
+    private static final String URL = "jdbc:mysql://localhost:3306/db";
     private static final String USER = "root"; // Default user in XAMPP
     private static final String PASSWORD = ""; // Default password is empty in XAMPP
 
@@ -74,9 +74,6 @@ public class DatabaseConnection {
         return null;
     }
     
-    
-    
-
     public static boolean phoneNumberExists(String phoneNumber) {
         String selectSql = "SELECT * FROM newusers WHERE phone_number = ?";
         try (Connection connection = getConnection();
@@ -149,4 +146,64 @@ public class DatabaseConnection {
             return false;
         }
     }
+
+    public static boolean updatePhonenumber(String username, String newPhonenumber ){
+        String updateSql = "UPDATE newusers SET phone_number = ? WHERE username = ?";
+        try (Connection connection = getConnection();
+         PreparedStatement preparedStatement = connection.prepareStatement(updateSql)){
+            preparedStatement.setString(1, newPhonenumber);
+            preparedStatement.setString(2, username);
+            int rowsUpdated = preparedStatement.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (SQLException e){
+            System.out.println("Database error in updatePhonenumber: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean emailLogin(String email, String password) {
+    String sql = "SELECT * FROM newusers WHERE email = ? AND password = ?";
+    try (Connection connection = getConnection();
+         PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        preparedStatement.setString(1, email);
+        preparedStatement.setString(2, password);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        return resultSet.next();
+    } catch (SQLException e) {
+        System.out.println("Database error in emailLogin: " + e.getMessage());
+        return false;
+    }
+}
+
+public static String getUsernameByEmail(String email) {
+    String sql = "SELECT username FROM newusers WHERE email = ?";
+    try (Connection connection = getConnection();
+         PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        preparedStatement.setString(1, email);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        if (resultSet.next()) {
+            return resultSet.getString("username");
+        }
+    } catch (SQLException e) {
+        System.out.println("Database error in getUsernameByEmail: " + e.getMessage());
+    }
+    return null;
+}
+public static int getUserId(String usernameOrEmail, String password) {
+    String sql = "SELECT id FROM newusers WHERE (username = ? OR email = ?) AND password = ?";
+    try (Connection connection = getConnection()) {
+        PreparedStatement pstmt = connection.prepareStatement(sql);
+        pstmt.setString(1, usernameOrEmail);
+        pstmt.setString(2, usernameOrEmail);
+        pstmt.setString(3, password);
+        ResultSet rs = pstmt.executeQuery();
+        if (rs.next()) {
+            return rs.getInt("id");  // Return user ID
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return -1;  // Return -1 if user not found
+}
 }

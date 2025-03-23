@@ -102,6 +102,10 @@ public class AppGui extends JFrame {
     }
 
     public void switchPanel(String panelName) {
+        if (!Session.isUserLoggedIn() && !panelName.equals("Home")) {
+            JOptionPane.showMessageDialog(this, "Please log in first!", "Access Denied", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
         cardLayout.show(mainPanel, panelName);
     }
 

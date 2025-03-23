@@ -3,9 +3,9 @@ package report;
 import java.time.LocalDate;
 
 public class MonthlyReport extends Report implements Pdfvalidate{
-    public MonthlyReport(int id, String fileName, int year, int month){
+    public MonthlyReport(String fileName, int year, int month){
         // Calculate start and end dates for the month
-        super(id, fileName, LocalDate.of(year, month, 1), LocalDate.of(year, month, LocalDate.of(year, month, 1).lengthOfMonth()));
+        super(fileName, LocalDate.of(year, month, 1), LocalDate.of(year, month, LocalDate.of(year, month, 1).lengthOfMonth()));
     }
     @Override
     public String getTitle(){
@@ -20,7 +20,7 @@ public class MonthlyReport extends Report implements Pdfvalidate{
         super.generatePDF();
     }
     public static void main(String[] args) {
-        MonthlyReport monthlyReport = new MonthlyReport(1, "Monthly_Report", 2025, 2);
+        MonthlyReport monthlyReport = new MonthlyReport("Monthly_Report", 2025, 2);
         monthlyReport.generatePDF();
     }
 }

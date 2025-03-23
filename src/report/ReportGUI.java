@@ -13,7 +13,7 @@ import java.awt.event.ActionListener;
 public class ReportGUI extends JPanel {
     private AppGui parentFrame;
     private JLabel startDateLabel, endDateLabel, yearLabel, monthLabel;
-    private JTextField idField, fileNamefield, startDateField, endDateField, yearField, monthField;
+    private JTextField fileNamefield, startDateField, endDateField, yearField, monthField;
     private JComboBox<String> reportTypeCombo;
     private JButton generateButton, displayButton, retriveButton, bacButton;
     private JTextArea resultArea;
@@ -37,13 +37,12 @@ public class ReportGUI extends JPanel {
         topPanel.add(Box.createHorizontalStrut(150));
         topPanel.add(reportTypeCombo);
 
-        inputPanel.add(new JLabel("Report ID:"));
-        idField = new JTextField(10);
-        inputPanel.add(idField);
 
         inputPanel.add(new JLabel("File Name:"));
         fileNamefield = new JTextField(10);
+        
         inputPanel.add(fileNamefield);
+
 
         startDateLabel = new JLabel("Start Date (YYYY-MM-DD): ");
         inputPanel.add(startDateLabel);
@@ -65,7 +64,6 @@ public class ReportGUI extends JPanel {
         monthField = new JTextField(10); // Initialize monthField
         inputPanel.add(monthField);
 
-        idField.setPreferredSize(new Dimension(150,50));
         retriveButton = new JButton("Retrieve PDF");
         generateButton = new JButton("Generate PDF");
         displayButton = new JButton("Display Report");
@@ -134,11 +132,14 @@ public class ReportGUI extends JPanel {
         // Always add Report Type
         topPanel.add(reportTypeCombo);
     
-        inputPanel.add(new JLabel("Report ID:"));
-        inputPanel.add(idField);
-        idField.setPreferredSize(new Dimension(150,50));
     
         inputPanel.add(new JLabel("File Name:"));
+        if(selectedType.equals("Full Report")){
+            fileNamefield.setFont(new Font("Arial", Font.PLAIN, 28));
+        }
+        else{
+            fileNamefield.setFont(new Font("Arial", Font.PLAIN, 16));
+        }
         inputPanel.add(fileNamefield);
     
         if (selectedType.equals("Monthly Report")) {
@@ -159,6 +160,9 @@ public class ReportGUI extends JPanel {
             inputPanel.add(endDateLabel);
             inputPanel.add(endDateField);
         }
+       
+        
+        
         buttonPanel.add(generateButton);
         buttonPanel.add(retriveButton);
         inputPanel.add(buttonPanel);
@@ -167,7 +171,6 @@ public class ReportGUI extends JPanel {
         inputPanel.revalidate(); // Refresh layout
         inputPanel.repaint();
 
-        idField.setText("");
         fileNamefield.setText("");
         startDateField.setText("");
         endDateField.setText("");
@@ -175,23 +178,22 @@ public class ReportGUI extends JPanel {
         monthField.setText("");
     }
     private Report getReportFromInput() throws Exception {
-        int id = Integer.parseInt(idField.getText());
         String fileName = fileNamefield.getText();
         String selectedType = (String) reportTypeCombo.getSelectedItem();
 
         if (selectedType.equals("Customizable Report")) {
             LocalDate startDate = LocalDate.parse(startDateField.getText());
             LocalDate endDate = LocalDate.parse(endDateField.getText());
-            return new CustomizeReport(id, fileName, startDate, endDate);
+            return new CustomizeReport(fileName, startDate, endDate);
         } else if (selectedType.equals("Monthly Report")) {
             int year = Integer.parseInt(yearField.getText());
             int month = Integer.parseInt(monthField.getText());
-            return new MonthlyReport(id, fileName, year, month);
+            return new MonthlyReport(fileName, year, month);
         } else if (selectedType.equals("Yearly Report")) {
             int year = Integer.parseInt(yearField.getText());
-            return new YearlyReport(id, fileName, year);
+            return new YearlyReport(fileName, year);
         } else {
-            return new Report(id, fileName);
+            return new Report(fileName);
         }
     }
     public static void main(String[] args) {

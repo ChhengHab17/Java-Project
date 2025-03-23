@@ -98,5 +98,49 @@ public class Usersetting {
             System.out.println("❌ Failed to update username. Try again later.");
         }
     }
+
+    public void changePhonenumber(){
+        System.out.println("\n🔒 Phone Number Change Process 🔒");
+    
+        // Step 1: Ask for user's password
+        System.out.print("Enter your password: " );
+        String currentPassword = scanner.nextLine();
+
+        // Step 2: verify password with database
+        String storedPassword = DatabaseConnection.getPassword(username);
+        if (storedPassword == null){
+            System.out.println("⚠️ Error: Unable to retrieve your password. Please check your username.");
+            return;
+        }
+        if (!storedPassword.equals(currentPassword)) {
+            System.out.println("❌ Incorrect password. Phone number change failed.");
+            return;
+        }
+
+        // Step 3: Ask for new phone number && confirm new phone number
+        System.out.print("Enter your new phone number: ");
+        String newPhonenumber = scanner.nextLine().trim();
+
+        System.out.print("COnfirm your new phone number: ");
+        String confirmPassword = scanner.nextLine().trim();
+
+        if (!newPhonenumber.equals(confirmPassword)) {
+            System.out.println("❌ Phone numbers do not match. Please try again.");
+            return;
+        }
+
+        //Step 4 updaate phone number in database
+        if (DatabaseConnection.updatePhonenumber(username, newPhonenumber)){
+            System.out.println("✅ Phone number changed successfully!");
+        } else {
+            System.out.println("❌ Failed to update phone number. Try again later.");
+        }
+    }
+    public void changeEmail(){
+        System.out.println("\n🔒 Email Change Process 🔒");
+    
+        // Step 1: Ask for user's password
+        
+    }
 }
 

@@ -1,17 +1,30 @@
 package report;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.crypto.Data;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
+
+import DatabaseConnector.DatabaseConnection;
+
 import java.awt.Color;
 import Expense.Expense;
+import Main.Session;
 
 public class Report {
     protected int id;
@@ -23,16 +36,14 @@ public class Report {
     public Report(){
         
     }
-    public Report(int id, String fileName){
-        this.id = id;
+    public Report(String fileName){
         this.fileName = fileName;
-        this.startDate = LocalDate.of(2021, 1, 1);
+        this.startDate = LocalDate.of(2000, 1, 1);
         this.endDate = LocalDate.now();
         this.expenses = new ArrayList<>();
         this.totalExpenses = 0;
     }
-    public Report(int id, String fileName, LocalDate startDate, LocalDate endDate){
-        this.id = id;
+    public Report(String fileName, LocalDate startDate, LocalDate endDate){
         this.fileName = fileName;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -152,13 +163,49 @@ public class Report {
             document.save(desktopPath + fileName + ".pdf");
             document.close();
             System.out.println("PDF generated successfully.");
+            saveToDatabase();
 
         }catch(IOException e){
             e.printStackTrace();
         }
     }
+    public void saveToDatabase() {
+    int userId = Session.getUserId();  // Get the logged-in user's ID
+    String query = "INSERT INTO reports (user_id, file_name, start_date, end_date, total_expenses, pdf_file) VALUES (?, ?, ?, ?, ?, ?)";
+    String desktopPath = System.getProperty("user.home") + "/Desktop/";
+    String newFilename = desktopPath + fileName + ".pdf";
+    File pdfFile = new File(newFilename);
+    if (!pdfFile.exists()) {
+        System.out.println("Error: PDF file not found! Generate the report first.");
+        return;
+    }
+
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+         FileInputStream pdfInput = new FileInputStream(pdfFile)) {
+
+        pstmt.setInt(1, userId);  // Set user_id in the query
+        pstmt.setString(2, fileName);
+        pstmt.setDate(3, Date.valueOf(startDate));
+        pstmt.setDate(4, Date.valueOf(endDate));
+        pstmt.setDouble(5, totalExpenses);  // Assuming you have this field
+        pstmt.setBinaryStream(6, pdfInput, (int) pdfFile.length());
+
+        int affectedRows = pstmt.executeUpdate();
+        if (affectedRows > 0) {
+            try (ResultSet keys = pstmt.getGeneratedKeys()) {
+                if (keys.next()) {
+                    this.id = keys.getInt(1);
+                    System.out.println("Report saved with ID: " + id);
+                }
+            }
+        }
+    } catch (SQLException | IOException e) {
+        e.printStackTrace();
+    }
+}
     public static void main(String[] args) {
-        Report report = new Report(1, "MainReport");
+        Report report = new Report( "MainReport");
         report.generatePDF();
     }
 }
