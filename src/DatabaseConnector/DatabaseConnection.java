@@ -161,4 +161,33 @@ public class DatabaseConnection {
             return false;
         }
     }
+
+    public static boolean emailLogin(String email, String password) {
+    String sql = "SELECT * FROM newusers WHERE email = ? AND password = ?";
+    try (Connection connection = getConnection();
+         PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        preparedStatement.setString(1, email);
+        preparedStatement.setString(2, password);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        return resultSet.next();
+    } catch (SQLException e) {
+        System.out.println("Database error in emailLogin: " + e.getMessage());
+        return false;
+    }
+}
+
+public static String getUsernameByEmail(String email) {
+    String sql = "SELECT username FROM newusers WHERE email = ?";
+    try (Connection connection = getConnection();
+         PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        preparedStatement.setString(1, email);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        if (resultSet.next()) {
+            return resultSet.getString("username");
+        }
+    } catch (SQLException e) {
+        System.out.println("Database error in getUsernameByEmail: " + e.getMessage());
+    }
+    return null;
+}
 }
