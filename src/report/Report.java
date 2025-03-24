@@ -61,25 +61,55 @@ public class Report {
     public String getDateRange(){
         return startDate + " - " + endDate;
     }
-    
-    @Override
-    public String toString() {
+    public double calcTotalExpenses(){
         expenses = ReportScript.getExpensesByDateRange(startDate, endDate);
-        totalExpenses = expenses.stream().mapToDouble(Expense::getAmount).sum();
-        StringBuilder expenseDetails = new StringBuilder();
+        
+        // Initialize variables for total expenses in USD and KHR
+        double totalUSD = 0.0;
+        double totalKHR = 0.0;
+        double exchangeRate = 4100.0;
     
+        StringBuilder expenseDetails = new StringBuilder();
+        
         if (expenses.isEmpty()) {
             expenseDetails.append("No expenses recorded.");
         } else {
+            // Loop through each expense to calculate totals and build the expense details
             for (Expense exp : expenses) {
-                expenseDetails.append(exp.toString()).append("\n"); // Add a new line after each expense
+                double amount = exp.getAmount();
+                String currency = exp.getCurrency();  // Assume Expense class has getCurrency method
+                
+                if ("USD".equals(currency)) {
+                    totalUSD += amount;  // Add USD directly to the totalUSD
+                } else if ("KHR".equals(currency)) {
+                    totalKHR += amount;  // Add KHR directly to the totalKHR
+                }
+                
+                // Append the expense details to the expenseDetails string
+                expenseDetails.append(exp.toString()).append("\n");
             }
         }
+    
+        // Convert total KHR to USD and add it to totalUSD
+        return totalUSD += totalKHR / exchangeRate;
+    }
+    
+    @Override
+    public String toString() {
+       double totalUSD = calcTotalExpenses();
+       double newTotalKHR = totalUSD * 4100;
+       expenses = ReportScript.getExpensesByDateRange(startDate, endDate);
+       StringBuilder expenseDetails = new StringBuilder();
+       for (Expense exp : expenses) {
+            expenseDetails.append(exp.toString()).append("\n");
+        }
+        // Return the full report with total in USD (including converted KHR)
         return "Report: " + fileName + "\n" +
                "ID: " + id + "\n" +
                "Date Range: " + getDateRange() + "\n" +
-               "Expenses: " + "\n" + expenseDetails.toString() +
-               "Total: $" + totalExpenses;
+               "Expenses: \n" + expenseDetails.toString() +
+               "Total in USD: $" + String.format("%.2f", totalUSD) + "\n" + // Total in USD
+               "Total in KHR: " + String.format("%.2f", newTotalKHR) + "៛";
     }
     
     public String getTitle(){
@@ -121,12 +151,6 @@ public class Report {
             contentStream.setFont(font, 14);
             contentStream.setNonStrokingColor(Color.black);
 
-            //left side
-            contentStream.beginText();
-            contentStream.newLineAtOffset(margin, startY);
-            contentStream.showText("Report ID: " + id);
-            contentStream.endText();
-            startY -= lineHeight;
             //Right side
             String allDate = getDateRange();
             float dateRangeWidth = font.getStringWidth(allDate) / 1000 * 14;
@@ -135,7 +159,14 @@ public class Report {
             contentStream.newLineAtOffset(dateRangeX, startY);
             contentStream.showText(allDate);
             contentStream.endText();
+
+            startY -= (lineHeight + 10);
+            contentStream.beginText();
+            contentStream.newLineAtOffset(margin, startY);
+            contentStream.showText("Report Name: " + fileName);
+            contentStream.endText();
             //Expenses
+            startY -= (lineHeight + 10);
             contentStream.beginText();
             contentStream.newLineAtOffset(margin, startY);
             contentStream.showText("Expenses: ");
@@ -143,7 +174,6 @@ public class Report {
             startY -= lineHeight;
             expenses = ReportScript.getExpensesByDateRange(startDate, endDate);
             for (Expense expense : expenses) {
-                totalExpenses += expense.getAmount();
                 contentStream.beginText();
                 contentStream.newLineAtOffset(margin + 20, startY);
                 contentStream.showText(expense.toString());
@@ -151,22 +181,36 @@ public class Report {
                 startY -= lineHeight;
             }
             //total Expense
+            totalExpenses = calcTotalExpenses();
+            double totalExpenseInKHR = totalExpenses * 4100;
+            String totalText = "Total: $" + String.format("%.2f", totalExpenses);
+            String totalTextKHR = "Total: " + String.format("%.2f", totalExpenseInKHR) + " Riels";
 
-            String totalText = "Total: $" + totalExpenses;
             float totalWidth = font.getStringWidth(totalText) / 1000 * 14;
-            float totalX = pageWidth - margin - totalWidth;
+            float totalX = pageWidth - margin - totalWidth -10;
             startY -= (lineHeight + 10);
+
             contentStream.beginText();
             contentStream.newLineAtOffset(totalX, startY);
             contentStream.showText(totalText);
             contentStream.endText();
+            startY -= lineHeight; // Move to the next line
+
+            // Now show the KHR total on the next line
+            contentStream.beginText();
+            contentStream.newLineAtOffset(totalX, startY);
+            contentStream.showText(totalTextKHR); // Show KHR total
+            contentStream.endText();
+
             contentStream.close();
            
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setDialogTitle("Save to PDF");
             fileChooser.setFileFilter(new FileNameExtensionFilter("PDF Documents", "pdf"));
 
-            fileChooser.setSelectedFile(new File(fileName + ".pdf"));
+            String finalFileName = (fileName != null && !fileName.isEmpty()) ? fileName : "DefaultReportName";
+            fileChooser.setSelectedFile(new File(finalFileName + ".pdf"));
+            
             int userSelection = fileChooser.showSaveDialog(null);
             if (userSelection != JFileChooser.APPROVE_OPTION) {
                 document.close();
