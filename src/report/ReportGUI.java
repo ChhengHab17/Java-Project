@@ -196,6 +196,7 @@ public class ReportGUI extends JPanel {
             return new Report(fileName);
         }
     }
+    
     public static void main(String[] args) {
         
     }

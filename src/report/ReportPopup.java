@@ -5,11 +5,17 @@ import java.awt.BorderLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
+import Main.Session;
+
 import java.awt.event.*;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -57,8 +63,9 @@ public class ReportPopup {
     private void loadReportsFromDatabase() {
         try {
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db", "root", "");
-            String query = "SELECT id, file_name FROM reports";
+            String query = "SELECT id, file_name FROM reports where user_id = ?";
             PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, Session.getUserId());
             ResultSet rs = stmt.executeQuery();
 
             listModel.clear();
@@ -83,9 +90,31 @@ public class ReportPopup {
         if (selectedReport != null) {
             try {
                 int reportId = reportMap.get(selectedReport);
-                ReportScript.retrievePDF(reportId,selectedReport);
-                JOptionPane.showMessageDialog(popupDialog, "PDF retrieved for: " + selectedReport);
-                popupDialog.dispose(); // Close popup after selection
+
+                // Open a file chooser for saving
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setDialogTitle("Save PDF File");
+                fileChooser.setFileFilter(new FileNameExtensionFilter("PDF Documents", "pdf"));
+                fileChooser.setSelectedFile(new File(selectedReport + ".pdf"));
+
+                int userSelection = fileChooser.showSaveDialog(popupDialog);
+
+                if (userSelection == JFileChooser.APPROVE_OPTION) {
+                    File fileToSave = fileChooser.getSelectedFile();
+                    String filePath = fileToSave.getAbsolutePath();
+
+                    // Ensure file has .pdf extension
+                    if (!filePath.toLowerCase().endsWith(".pdf")) {
+                        filePath += ".pdf";
+                    }
+
+                    // Retrieve and save the PDF
+                    ReportScript.retrievePDF(reportId, filePath);
+
+                    JOptionPane.showMessageDialog(popupDialog, "PDF saved successfully at: " + filePath);
+                    popupDialog.dispose(); // Close popup after selection
+                }
+
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(popupDialog, "Error retrieving report: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }

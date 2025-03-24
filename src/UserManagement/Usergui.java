@@ -36,8 +36,8 @@ public class Usergui extends JPanel {
         mainPanel.add(registerPanel, "Register");
 
         // User Menu Panel
-        JPanel userMenuPanel = createUserMenuPanel();
-        mainPanel.add(userMenuPanel, "UserMenu");
+        // JPanel userMenuPanel = createUserMenuPanel();
+        // mainPanel.add(userMenuPanel, "UserMenu");
 
         setLayout(new BorderLayout());
         add(mainPanel, BorderLayout.CENTER);
@@ -157,28 +157,6 @@ public class Usergui extends JPanel {
         return panel;
     }
 
-    private JPanel createUserMenuPanel() {
-        JPanel panel = new JPanel(new GridLayout(4, 1, 5, 5));
-        panel.setBorder(BorderFactory.createTitledBorder("User Menu"));
-
-        JButton displayInfoButton = new JButton("Display Information");
-        JButton changeSettingsButton = new JButton("Change Settings");
-        JButton viewHistoryButton = new JButton("View Login History");
-        JButton logoutButton = new JButton("Logout");
-
-        panel.add(displayInfoButton);
-        panel.add(changeSettingsButton);
-        panel.add(viewHistoryButton);
-        panel.add(logoutButton);
-
-        displayInfoButton.addActionListener(e -> displayUserInfo());
-        changeSettingsButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "Settings not implemented yet."));
-        viewHistoryButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "Login history not implemented yet."));
-        logoutButton.addActionListener(e -> cardLayout.show(mainPanel, "MainMenu"));
-
-        return panel;
-    }
-
     private void loginUser() {
         String usernameOrEmail = loginUsernameField.getText();
         String password = new String(loginPasswordField.getPassword());
@@ -236,10 +214,6 @@ public class Usergui extends JPanel {
         } else {
             JOptionPane.showMessageDialog(this, "Failed to register user.", "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }
-
-    private void displayUserInfo() {
-        JOptionPane.showMessageDialog(this, "Displaying user information for: " + loggedInUser, "User Info", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public static void main(String[] args) {

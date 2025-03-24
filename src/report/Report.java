@@ -13,6 +13,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.crypto.Data;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -83,7 +85,7 @@ public class Report {
     public String getTitle(){
         return "MainReport";
     }
-    public void generatePDF(){
+    public void generatePDF() throws Exception{
         try{
             PDDocument document = new PDDocument();
             PDPage page = new PDPage();
@@ -159,10 +161,33 @@ public class Report {
             contentStream.showText(totalText);
             contentStream.endText();
             contentStream.close();
-            String desktopPath = System.getProperty("user.home") + "/Desktop/";
-            document.save(desktopPath + fileName + ".pdf");
+           
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Save to PDF");
+            fileChooser.setFileFilter(new FileNameExtensionFilter("PDF Documents", "pdf"));
+
+            fileChooser.setSelectedFile(new File(fileName + ".pdf"));
+            int userSelection = fileChooser.showSaveDialog(null);
+            if (userSelection != JFileChooser.APPROVE_OPTION) {
+                document.close();
+                throw new Exception("User canceled file selection.");
+            }
+            if (userSelection == JFileChooser.APPROVE_OPTION) {
+                File fileToSave = fileChooser.getSelectedFile();
+                String filePath = fileToSave.getAbsolutePath();
+    
+                // Ensure .pdf extension
+                if (!filePath.toLowerCase().endsWith(".pdf")) {
+                    filePath += ".pdf";
+                }
+    
+                document.save(filePath);
+                System.out.println("PDF saved to: " + filePath);
+            } else {
+                System.out.println("Save operation canceled.");
+            }
+
             document.close();
-            System.out.println("PDF generated successfully.");
             saveToDatabase();
 
         }catch(IOException e){
@@ -204,7 +229,7 @@ public class Report {
         e.printStackTrace();
     }
 }
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         Report report = new Report( "MainReport");
         report.generatePDF();
     }
