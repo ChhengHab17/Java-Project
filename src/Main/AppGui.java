@@ -121,7 +121,7 @@ public class AppGui extends JFrame {
             JFrame frame = new JFrame("User Management");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.getContentPane().add(new Usergui());
-            frame.setSize(350, 350);
+            frame.setSize(400, 300);
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
         });

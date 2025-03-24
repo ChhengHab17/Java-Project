@@ -1,6 +1,8 @@
 package UserManagement;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
+
 import java.awt.*;
 import DatabaseConnector.DatabaseConnection;
 import Main.Session;
@@ -43,28 +45,57 @@ public class Usergui extends JPanel {
     }
 
     private JPanel createMainMenuPanel() {
-        JPanel panel = new JPanel(new GridLayout(3, 1, 5, 5));
-        panel.setBorder(BorderFactory.createTitledBorder("Main Menu"));
-
+        // Create a panel for buttons with a larger size
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Main Menu",TitledBorder.CENTER, TitledBorder.TOP));
+        panel.setPreferredSize(new Dimension(400, 400)); // Force bigger size
+        panel.setMaximumSize(new Dimension(400, 400));
+        panel.setMinimumSize(new Dimension(400, 400));
+    
+        // Create buttons
         JButton registerButton = new JButton("Register New User");
         JButton loginButton = new JButton("Login");
         JButton exitButton = new JButton("Exit");
-
+    
+        // Set button size
+        Dimension buttonSize = new Dimension(250, 60);
+        registerButton.setPreferredSize(buttonSize);
+        registerButton.setMaximumSize(buttonSize);
+        loginButton.setPreferredSize(buttonSize);
+        loginButton.setMaximumSize(buttonSize);
+        exitButton.setPreferredSize(buttonSize);
+        exitButton.setMaximumSize(buttonSize);
+    
+        // Center align buttons
+        registerButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        loginButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        exitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+    
+        // Add buttons with spacing
+        panel.add(Box.createVerticalGlue()); // Pushes content to center
         panel.add(registerButton);
+        panel.add(Box.createVerticalStrut(20));
         panel.add(loginButton);
+        panel.add(Box.createVerticalStrut(20));
         panel.add(exitButton);
+        panel.add(Box.createVerticalGlue());
 
         registerButton.addActionListener(e -> cardLayout.show(mainPanel, "Register"));
         loginButton.addActionListener(e -> cardLayout.show(mainPanel, "Login"));
         exitButton.addActionListener(e -> System.exit(0));
-
-        return panel;
+    
+        // Wrapper panel to ensure the panel is centered and sized correctly
+        JPanel wrapperPanel = new JPanel(new BorderLayout());
+        wrapperPanel.setPreferredSize(new Dimension(600, 500)); // Make the whole container bigger
+        wrapperPanel.add(panel, BorderLayout.CENTER);
+    
+        return wrapperPanel;
     }
 
     private JPanel createLoginPanel() {
         JPanel panel = new JPanel(new GridLayout(3, 1, 5, 5));
         panel.setBorder(BorderFactory.createTitledBorder("Login"));
-        panel.setPreferredSize(new Dimension(200,200));
         loginUsernameField = new JTextField();
         loginPasswordField = new JPasswordField();
         JButton loginButton = new JButton("Login");
