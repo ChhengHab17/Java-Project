@@ -116,13 +116,13 @@ public class DatabaseConnection {
         }
     }
 
-    public static boolean updatePassword(String username, String newPassword) {
-        String updateSql = "UPDATE newusers SET password = ? WHERE username = ?";
+    public static boolean updatePassword(int id, String newPassword) {
+        String updateSql = "UPDATE newusers SET password = ? WHERE id = ?";
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(updateSql)) {
             
             preparedStatement.setString(1, newPassword);
-            preparedStatement.setString(2, username);
+            preparedStatement.setInt(2, id);
     
             int rowsUpdated = preparedStatement.executeUpdate();
             return rowsUpdated > 0;
@@ -132,12 +132,12 @@ public class DatabaseConnection {
         }
     }
     
-    public static boolean updateUsername(String oldUsername, String newUsername) {
-        String updateSql = "UPDATE newusers SET username = ? WHERE username = ?";
+    public static boolean updateUsername(int id, String newUsername) {
+        String updateSql = "UPDATE newusers SET username = ? WHERE id = ?";
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(updateSql)) {
             preparedStatement.setString(1, newUsername);
-            preparedStatement.setString(2, oldUsername);
+            preparedStatement.setInt(2, id);
             int rowsUpdated = preparedStatement.executeUpdate();
             return rowsUpdated > 0;
         } catch (SQLException e) {
@@ -147,12 +147,12 @@ public class DatabaseConnection {
         }
     }
 
-    public static boolean updatePhonenumber(String username, String newPhonenumber ){
-        String updateSql = "UPDATE newusers SET phone_number = ? WHERE username = ?";
+    public static boolean updatePhonenumber(int id, String newPhonenumber ){
+        String updateSql = "UPDATE newusers SET phone_number = ? WHERE id = ?";
         try (Connection connection = getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(updateSql)){
             preparedStatement.setString(1, newPhonenumber);
-            preparedStatement.setString(2, username);
+            preparedStatement.setInt(2, id);
             int rowsUpdated = preparedStatement.executeUpdate();
             return rowsUpdated > 0;
         } catch (SQLException e){

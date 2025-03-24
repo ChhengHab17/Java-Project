@@ -3,6 +3,7 @@ package Main;
 import javax.swing.*;
 import Expense.ExpenseGUI;
 import Expense.ExpenseManager;
+import Systemsetting.Usersettinggui;
 import UserManagement.Usergui;
 import report.*;
 import java.awt.*;
@@ -12,6 +13,7 @@ public class AppGui extends JFrame {
     private JPanel mainPanel;
     private CardLayout cardLayout;
     private ExpenseGUI expensePanel;
+    private Usersettinggui userSetting;
     ExpenseManager expenseManager = new ExpenseManager();
 
     public AppGui() {
@@ -25,11 +27,13 @@ public class AppGui extends JFrame {
         JPanel homePanel = createHomePanel();
         ReportGUI reportPanel = new ReportGUI(this);
         expensePanel = new ExpenseGUI(this);
+        userSetting = new Usersettinggui(this);
 
         mainPanel.setLayout(cardLayout);
         mainPanel.add("Home", homePanel);
         mainPanel.add("Report", reportPanel);
         mainPanel.add("Expense", expensePanel);
+        mainPanel.add("Settings", userSetting);
         cardLayout.show(mainPanel, "Login");
         add(mainPanel);
 

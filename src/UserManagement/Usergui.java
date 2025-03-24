@@ -62,9 +62,9 @@ public class Usergui extends JPanel {
     }
 
     private JPanel createLoginPanel() {
-        JPanel panel = new JPanel(new GridLayout(4, 1, 5, 5));
+        JPanel panel = new JPanel(new GridLayout(3, 1, 5, 5));
         panel.setBorder(BorderFactory.createTitledBorder("Login"));
-
+        panel.setPreferredSize(new Dimension(200,200));
         loginUsernameField = new JTextField();
         loginPasswordField = new JPasswordField();
         JButton loginButton = new JButton("Login");
