@@ -15,7 +15,7 @@ public class Usergui extends JPanel {
     private JComboBox<String> genderComboBox;
 
     private String loggedInUser; // Stores the logged-in username
-    private int loggedInUserId; // Stores the logged-in user's ID
+
 
     public Usergui() {
         cardLayout = new CardLayout();
@@ -212,13 +212,6 @@ public class Usergui extends JPanel {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("User Management");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.getContentPane().add(new Usergui());
-            frame.setSize(400, 600);
-            frame.setLocationRelativeTo(null);
-            frame.setVisible(true);
-        });
+        
     }
 }

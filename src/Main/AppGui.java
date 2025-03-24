@@ -3,6 +3,7 @@ package Main;
 import javax.swing.*;
 import Expense.ExpenseGUI;
 import Expense.ExpenseManager;
+import UserManagement.Usergui;
 import report.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -20,8 +21,7 @@ public class AppGui extends JFrame {
         setLocationRelativeTo(null);
 
         cardLayout = new CardLayout();
-        mainPanel = new JPanel();
-
+        mainPanel = new JPanel();;
         JPanel homePanel = createHomePanel();
         ReportGUI reportPanel = new ReportGUI(this);
         expensePanel = new ExpenseGUI(this);
@@ -30,7 +30,7 @@ public class AppGui extends JFrame {
         mainPanel.add("Home", homePanel);
         mainPanel.add("Report", reportPanel);
         mainPanel.add("Expense", expensePanel);
-
+        cardLayout.show(mainPanel, "Login");
         add(mainPanel);
 
         setVisible(true);
@@ -66,7 +66,10 @@ public class AppGui extends JFrame {
         JButton budgetBtn = createStyledButton("Budget Management");
         JButton settingsBtn = createStyledButton("System Settings");
         JButton exitBtn = createStyledButton("Exit");
-    
+        
+        exitBtn.setBackground(Color.GRAY);
+        exitBtn.setForeground(Color.WHITE);
+
         expenseBtn.addActionListener(e -> switchPanel("Expense"));
         reportBtn.addActionListener(e -> switchPanel("Report"));
         budgetBtn.addActionListener(e -> switchPanel("Budget"));
@@ -110,7 +113,14 @@ public class AppGui extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new AppGui());
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("User Management");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.getContentPane().add(new Usergui());
+            frame.setSize(350, 350);
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+        });
     }
 }
 
