@@ -5,6 +5,7 @@ import Expense.ExpenseGUI;
 import Expense.ExpenseManager;
 import Systemsetting.Usersettinggui;
 import UserManagement.Usergui;
+import budget.BudgetGui;
 import report.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -28,12 +29,14 @@ public class AppGui extends JFrame {
         ReportGUI reportPanel = new ReportGUI(this);
         expensePanel = new ExpenseGUI(this);
         userSetting = new Usersettinggui(this);
+        BudgetGui budgetPanel = new BudgetGui(this);
 
         mainPanel.setLayout(cardLayout);
         mainPanel.add("Home", homePanel);
         mainPanel.add("Report", reportPanel);
         mainPanel.add("Expense", expensePanel);
         mainPanel.add("Settings", userSetting);
+        mainPanel.add("Budget", budgetPanel);
         cardLayout.show(mainPanel, "Login");
         add(mainPanel);
 
