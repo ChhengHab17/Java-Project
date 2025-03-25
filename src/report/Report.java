@@ -105,7 +105,6 @@ public class Report {
         }
         // Return the full report with total in USD (including converted KHR)
         return "Report: " + fileName + "\n" +
-               "ID: " + id + "\n" +
                "Date Range: " + getDateRange() + "\n" +
                "Expenses: \n" + expenseDetails.toString() +
                "Total in USD: $" + String.format("%.2f", totalUSD) + "\n" + // Total in USD
@@ -216,34 +215,29 @@ public class Report {
                 document.close();
                 throw new Exception("User canceled file selection.");
             }
-            if (userSelection == JFileChooser.APPROVE_OPTION) {
-                File fileToSave = fileChooser.getSelectedFile();
-                String filePath = fileToSave.getAbsolutePath();
-    
-                // Ensure .pdf extension
-                if (!filePath.toLowerCase().endsWith(".pdf")) {
-                    filePath += ".pdf";
-                }
-    
-                document.save(filePath);
-                System.out.println("PDF saved to: " + filePath);
-            } else {
-                System.out.println("Save operation canceled.");
-            }
+            if (userSelection != JFileChooser.APPROVE_OPTION) {
 
+                System.out.println("Save operation canceled.");
+                document.close();
+            } 
+            File fileToSave = fileChooser.getSelectedFile();
+            String filePath = fileToSave.getAbsolutePath();
+            if (!filePath.toLowerCase().endsWith(".pdf")) {
+                filePath += ".pdf";
+            }
+            document.save(filePath);
             document.close();
-            saveToDatabase();
+            System.out.println("PDF saved successfully at: " + fileName);
+            saveToDatabase(fileName,filePath);
 
         }catch(IOException e){
             e.printStackTrace();
         }
     }
-    public void saveToDatabase() {
+    public void saveToDatabase(String fileName, String filePath) {
     int userId = Session.getUserId();  // Get the logged-in user's ID
     String query = "INSERT INTO reports (user_id, file_name, start_date, end_date, total_expenses, pdf_file) VALUES (?, ?, ?, ?, ?, ?)";
-    String desktopPath = System.getProperty("user.home") + "/Desktop/";
-    String newFilename = desktopPath + fileName + ".pdf";
-    File pdfFile = new File(newFilename);
+    File pdfFile = new File(filePath);
     if (!pdfFile.exists()) {
         System.out.println("Error: PDF file not found! Generate the report first.");
         return;
