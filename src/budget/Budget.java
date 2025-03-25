@@ -1,36 +1,77 @@
 package budget;
 
 public class Budget {
-
+    private int userID;
     private double weeklyBudget;
     private double monthlyBudget;
+    private String currency;
+    private double convertedWeeklyBudget;
+    private double convertedMonthlyBudget;
 
-    public Budget(double weekly, double monthly) {
-        this.weeklyBudget = weekly;
-        this.monthlyBudget = monthly;
-    } 
-    public void setBudget(double weekly, double monthly) {
-        this.weeklyBudget = weekly;
-        this.monthlyBudget = monthly;
-        System.out.println("Budget Set Successfully");
+    public Budget(int userID, double weeklyBudget, double monthlyBudget) {
+        this.userID = userID;
+        this.weeklyBudget = weeklyBudget;
+        this.monthlyBudget = monthlyBudget;
     }
-    public boolean isOverWeeklyBudget(double spentAmount) {
-        return spentAmount > weeklyBudget;
+
+    // Getters and setters
+    public int getUserID() {
+        return userID;
     }
+
+    public void setBudget(double weeklyBudget, double monthlyBudget) {
+        this.weeklyBudget = weeklyBudget;
+        this.monthlyBudget = monthlyBudget;
+        
+    }
+
+    public double getWeeklyBudget() {
+        return weeklyBudget;
+    }
+
+    public double getMonthlyBudget() {
+        return monthlyBudget;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+    public double getConvertedWeeklyBudget() {
+        return convertedWeeklyBudget;
+    }
+
+    public void setConvertedWeeklyBudget(double convertedWeeklyBudget) {
+        this.convertedWeeklyBudget = convertedWeeklyBudget;
+    }
+
+    public double getConvertedMonthlyBudget() {
+        return convertedMonthlyBudget;
+    }
+
+    public void setConvertedMonthlyBudget(double convertedMonthlyBudget) {
+        this.convertedMonthlyBudget = convertedMonthlyBudget;
+    }
+
     public void editBudget(double newWeekly, double newMonthly) {
         this.weeklyBudget = newWeekly;
         this.monthlyBudget = newMonthly;
-        System.out.println("Budget Updated Successfully");
     }
     public void deleteBudget() {
         this.weeklyBudget = 0;
         this.monthlyBudget = 0;
-        System.out.println("Budget Delete Successfully");
+        this.currency = "USD";
+        System.out.println("Budget for this User ID: " + userID + "has been deleted");
     }
-    public void displayBudget() {
-        System.out.println("Current Budget: ");
-        System.out.println("Weekly Budget: " + weeklyBudget);
-        System.out.println("Monthly Budget: " + monthlyBudget);
+    public String displayBudget() {
+        return "User ID: " + userID + "\n" +
+        "Weekly Budget: " + weeklyBudget + " " + currency + "\n" +
+        "Monthly Budget: " + monthlyBudget + " " + currency + "\n" +
+        "Converted Weekly Budget: " + convertedWeeklyBudget + " KHR\n" +
+        "Converted Monthly Budget: " + convertedMonthlyBudget + " KHR";
     }
 }
-
