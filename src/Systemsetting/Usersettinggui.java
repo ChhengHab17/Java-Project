@@ -30,13 +30,13 @@ public class Usersettinggui extends JPanel {
 
         // 🏠 Add panels
         JPanel loginPanel = createLoginPanel();
-        JPanel menuPanel = createMenuPanel();
+        // JPanel menuPanel = createMenuPanel();
         JPanel changePasswordPanel = createChangePasswordPanel();
         JPanel changeUsernamePanel = createChangeUsernamePanel();
         JPanel changePhonePanel = createChangePhonePanel();
 
         mainPanel.add(loginPanel, "Login");
-        mainPanel.add(menuPanel, "Menu");
+        // mainPanel.add(menuPanel, "Menu");
         mainPanel.add(changePasswordPanel, "ChangePassword"); // ✅ Ensured it is added
         mainPanel.add(changeUsernamePanel, "ChangeUsername");
         mainPanel.add(changePhonePanel, "ChangePhone");
@@ -90,27 +90,27 @@ public class Usersettinggui extends JPanel {
         }
     }
 
-    private JPanel createMenuPanel() {
-        JPanel panel = new JPanel(new GridLayout(4, 1, 5, 5));
-        panel.setBorder(BorderFactory.createTitledBorder("User Settings"));
+    // private JPanel createMenuPanel() {
+    //     JPanel panel = new JPanel(new GridLayout(4, 1, 5, 5));
+    //     panel.setBorder(BorderFactory.createTitledBorder("User Settings"));
 
-        JButton changePasswordButton = new JButton("Change Password");
-        JButton changeUsernameButton = new JButton("Change Username");
-        JButton changePhoneButton = new JButton("Change Phone Number");
-        JButton logoutButton = new JButton("Logout");
+    //     JButton changePasswordButton = new JButton("Change Password");
+    //     JButton changeUsernameButton = new JButton("Change Username");
+    //     JButton changePhoneButton = new JButton("Change Phone Number");
+    //     JButton logoutButton = new JButton("Logout");
 
-        panel.add(changePasswordButton);
-        panel.add(changeUsernameButton);
-        panel.add(changePhoneButton);
-        panel.add(logoutButton);
+    //     panel.add(changePasswordButton);
+    //     panel.add(changeUsernameButton);
+    //     panel.add(changePhoneButton);
+    //     panel.add(logoutButton);
 
-        changePasswordButton.addActionListener(e -> cardLayout.show(mainPanel, "ChangePassword"));
-        changeUsernameButton.addActionListener(e -> cardLayout.show(mainPanel, "ChangeUsername"));
-        changePhoneButton.addActionListener(e -> cardLayout.show(mainPanel, "ChangePhone"));
-        logoutButton.addActionListener(e -> cardLayout.show(mainPanel, "Login"));
+    //     changePasswordButton.addActionListener(e -> cardLayout.show(mainPanel, "ChangePassword"));
+    //     changeUsernameButton.addActionListener(e -> cardLayout.show(mainPanel, "ChangeUsername"));
+    //     changePhoneButton.addActionListener(e -> cardLayout.show(mainPanel, "ChangePhone"));
+    //     logoutButton.addActionListener(e -> cardLayout.show(mainPanel, "Login"));
 
-        return panel;
-    }
+    //     return panel;
+    // }
 
     private JPanel createChangePasswordPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
