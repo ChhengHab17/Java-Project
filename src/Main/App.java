@@ -2,12 +2,15 @@ package Main;
 import java.util.InputMismatchException;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
+import java.sql.Connection;
+import java.sql.DriverManager;
 
 import Expense.*;
 import report.*;
 import Systemsetting.*;
 import UserManagement.User;
 import budget.*;
+import DatabaseConnector.*;
 
 import java.time.LocalDate;
 
@@ -313,7 +316,7 @@ public class App {
         App app = new App();
         System.out.println("Welcome to Expense Tracker!");
         
-            // app.userMenu();
+            app.userMenu();
             app.mainMenu();
             
         

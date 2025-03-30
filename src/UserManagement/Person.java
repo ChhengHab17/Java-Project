@@ -20,9 +20,6 @@ public class Person {
     // Methods that can be overridden
     public void displayInfo() {
         System.out.println("\n====== Personal Information ======");
-        System.out.println("Name: " + firstName + " " + lastName);
-        System.out.println("Date of Birth: " + dob);
-        System.out.println("Gender: " + gender);
         System.out.println("Phone: " + phoneNumber);
         System.out.println("Email: " + email);
     }
@@ -35,8 +32,8 @@ public class Person {
         return phoneNumber != null && phoneNumber.matches("^\\+?[0-9]{9,12}$");
     }
 
-    public void updateProfile(String phoneNumber, String email) {
-        this.phoneNumber = phoneNumber;
-        this.email = email;
-    }
+    // public void updateProfile(String phoneNumber, String email) {
+    //     this.phoneNumber = phoneNumber;
+    //     this.email = email;
+    // }
 }

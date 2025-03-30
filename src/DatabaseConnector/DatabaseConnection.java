@@ -16,18 +16,14 @@ public class DatabaseConnection {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
-    public static int insertUser(String firstName, String lastName, String dob, String gender, String phoneNumber, String email, String username, String password) {
-        String insertSql = "INSERT INTO newusers (first_name, last_name, dob, gender, phone_number, email, username, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    public static int insertUser( String phoneNumber, String email, String username, String password) {
+        String insertSql = "INSERT INTO newusers (username, email, phone_number, password) VALUES (?, ?, ?, ?)";
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS)) {
-            preparedStatement.setString(1, firstName);
-            preparedStatement.setString(2, lastName);
-            preparedStatement.setDate(3, java.sql.Date.valueOf(dob)); 
-            preparedStatement.setString(4, gender);
-            preparedStatement.setString(5, phoneNumber);
-            preparedStatement.setString(6, email);
-            preparedStatement.setString(7, username);
-            preparedStatement.setString(8, password);
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, email);
+            preparedStatement.setString(3, phoneNumber);
+            preparedStatement.setString(4, password);
             int rowsInserted = preparedStatement.executeUpdate();
             if (rowsInserted > 0) {
                 try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {

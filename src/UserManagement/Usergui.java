@@ -11,8 +11,7 @@ public class Usergui extends JPanel {
     private CardLayout cardLayout;
     private JPanel mainPanel;
 
-    private JTextField loginUsernameField, registerFirstNameField, registerLastNameField,
-            registerDobField, registerPhoneNumberField, registerEmailField, registerUsernameField;
+    private JTextField loginUsernameField, registerPhoneNumberField, registerEmailField, registerUsernameField;
     private JPasswordField loginPasswordField, registerPasswordField, confirmPasswordField;
     private JComboBox<String> genderComboBox;
 
@@ -118,32 +117,20 @@ public class Usergui extends JPanel {
         JPanel panel = new JPanel(new GridLayout(10, 2, 5, 5));
         panel.setBorder(BorderFactory.createTitledBorder("Register"));
 
-        registerFirstNameField = new JTextField();
-        registerLastNameField = new JTextField();
-        registerDobField = new JTextField();
-        genderComboBox = new JComboBox<>(new String[]{"Male", "Female", "Other"});
-        registerPhoneNumberField = new JTextField();
-        registerEmailField = new JTextField();
         registerUsernameField = new JTextField();
+        registerEmailField = new JTextField();
+        registerPhoneNumberField = new JTextField();
         registerPasswordField = new JPasswordField();
         confirmPasswordField = new JPasswordField();
         JButton registerButton = new JButton("Register");
         JButton backButton = new JButton("Back");
 
-        panel.add(new JLabel("First Name:"));
-        panel.add(registerFirstNameField);
-        panel.add(new JLabel("Last Name:"));
-        panel.add(registerLastNameField);
-        panel.add(new JLabel("Date of Birth (YYYY-MM-DD):"));
-        panel.add(registerDobField);
-        panel.add(new JLabel("Gender:"));
-        panel.add(genderComboBox);
-        panel.add(new JLabel("Phone Number:"));
-        panel.add(registerPhoneNumberField);
-        panel.add(new JLabel("Email:"));
-        panel.add(registerEmailField);
         panel.add(new JLabel("Username:"));
         panel.add(registerUsernameField);
+        panel.add(new JLabel("Email:"));
+        panel.add(registerEmailField);
+        panel.add(new JLabel("Phone Number:"));
+        panel.add(registerPhoneNumberField);
         panel.add(new JLabel("Password:"));
         panel.add(registerPasswordField);
         panel.add(new JLabel("Confirm Password:"));
@@ -186,19 +173,19 @@ public class Usergui extends JPanel {
     }
 
     private void registerUser() {
-        String firstName = registerFirstNameField.getText();
-        String lastName = registerLastNameField.getText();
-        String dob = registerDobField.getText();
-        String gender = (String) genderComboBox.getSelectedItem();
-        String phoneNumber = registerPhoneNumberField.getText();
-        String email = registerEmailField.getText();
         String username = registerUsernameField.getText();
+        String email = registerEmailField.getText();
+        String phoneNumber = registerPhoneNumberField.getText();
         String password = new String(registerPasswordField.getPassword());
         String confirmPassword = new String(confirmPasswordField.getPassword());
 
-        if (firstName.isEmpty() || lastName.isEmpty() || dob.isEmpty() || phoneNumber.isEmpty() ||
-                email.isEmpty() || username.isEmpty() || password.isEmpty()) {
+        if ( phoneNumber.isEmpty() || email.isEmpty() || username.isEmpty() || password.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please fill in all fields", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (password.length() < 8) {
+            JOptionPane.showMessageDialog(this, "Password must be at least 8 characters long!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -207,7 +194,7 @@ public class Usergui extends JPanel {
             return;
         }
 
-        boolean success = DatabaseConnection.insertUser(firstName, lastName, dob, gender, phoneNumber, email, username, password) > 0;
+        boolean success = DatabaseConnection.insertUser( phoneNumber, email, username, password) > 0;
         if (success) {
             JOptionPane.showMessageDialog(this, "Registration successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
             cardLayout.show(mainPanel, "MainMenu");
