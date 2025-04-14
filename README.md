@@ -2,9 +2,9 @@
 The track expenses applicaton is an application that tracks our expenses monthly by manually input the expenese based on the categories and it will genereate a report of the expenses monthly for users.
 
 ## Library
-To use our feature of generate report you need to install this library and add it to your Java project
-(commons-logging-1.2.jar)
-[Generate Reports library](fontbox-2.0.27.jar)
+To use our feature of generate report you need to install this library and add it to your Java project<br>
+[Generate Reports library](commons-logging-1.2.jar)<br>
+[Generate Reports library](fontbox-2.0.27.jar)<br>
 [Generate Reports library](pdfbox-2.0.27.jar)
 
 ## Core Features
