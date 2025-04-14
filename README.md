@@ -1,5 +1,10 @@
 # Track expenses application
 The track expenses applicaton is an application that tracks our expenses monthly by manually input the expenese based on the categories and it will genereate a report of the expenses monthly for users.
+
+## Library
+To use our feature of generate report you need to install this library and add it to your Java project
+
+
 ## Core Features
 1. User managaement
    - Register
