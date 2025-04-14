@@ -5,7 +5,7 @@ The track expenses applicaton is an application that tracks our expenses monthly
 To use our feature of generate report you need to install this library and add it to your Java project<br>
 [Generate Reports library](commons-logging-1.2.jar)<br>
 [Generate Reports library](fontbox-2.0.27.jar)<br>
-[Generate Reports library](pdfbox-2.0.27.jar)
+[Generate Reports library](pdfbox-2.0.27.jar)<br>
 To use our database and connect to use it install this file and add it to the Java project<br>
 [Database connector](mysql-connector-j-9.2.0.jar)
 ## Core Features
